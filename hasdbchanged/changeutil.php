@@ -62,6 +62,7 @@ class TableUtility
 		{
 			$emsg = $e->getMessage();
 			echo "caught exception=".$emsg;
+			throw $e;
 		}
 		try {
 			$retBasicFormat = $this->p_getBasicFormat();
@@ -70,6 +71,7 @@ class TableUtility
 		{
 			$emsg = $e->getMessage();
 			echo "caught exception=".$emsg;
+			throw $e;
 		}
 		try {
 			$this->p_uninit();
@@ -78,17 +80,51 @@ class TableUtility
 		{
 			$emsg = $e->getMessage();
 			echo "caught exception=".$emsg;
+			throw $e;
 		}
 		return $retBasicFormat;
 	}
 	public function getBasicColumnDataType()
 	{
+		$retBasicCDT = "";
+		try {
+			$this->p_init();
+		}
+		catch (Exception $e)
+		{
+			$emsg = $e->getMessage();
+			echo "caught exception=".$emsg;
+			throw $e;
+		}
+		try {
+			$retBasicCDT = $this->p_getBasicColumnDataType();
+		}
+		catch (Exception $e)
+		{
+			$emsg = $e->getMessage();
+			echo "caught exception=".$emsg;
+			throw $e;
+		}
+		try {
+			$this->p_uninit();
+		}
+		catch (Exception $e)
+		{
+			$emsg = $e->getMessage();
+			echo "caught exception=".$emsg;
+			throw $e;
+		}
+		return $retBasicCDT;
 	}
 	private function p_init()
 	{
 		$this->m_mysqli = new mysqli($this->m_host, $this->m_user, $this->m_pass, $this->m_database);
 		if ($this->m_mysqli->connect_errno)
-			echo "Failed to connect to MySQL: (" . $m_mysqli->connect_errno . ") " . $this->m_mysqli->connect_error;
+		{
+			$errMsg = "Failed to connect to MySQL: (" . $m_mysqli->connect_errno . ") " . $this->m_mysqli->connect_error;
+			echo "$errMsg";
+			throw new Exception($errMsg);
+		}
 		echo $this->m_mysqli->host_info . "\n";
 	}
 	private function p_uninit()
@@ -116,6 +152,39 @@ class TableUtility
 		{
 			$numCols++;
 			$retValue .= $columnName;
+			$retValue .= COL_SEP;
+
+		}
+		if ($numCols > 0)
+		{
+			// Remove the last COL_SEP.
+			$lenRetValue = strlen($retValue);
+			$temp = substr($retValue, 0, ($lenRetValue-1));
+			$retValue = $temp;
+		}
+		$stmt->close();
+		return $retValue;
+	}
+	private function p_getBasicColumnDataType()
+	{
+		$retValue = "";
+		$query = "select COLUMN_NAME, COLUMN_TYPE from ";
+		$query .= "INFORMATION_SCHEMA.COLUMNS ";
+		$query .= "WHERE TABLE_NAME = ?";
+
+		$stmt = $this->m_mysqli->prepare($query);
+
+		$stmt->bind_param('s', $tblName); 
+		$tblName = $this->m_table;
+		$stmt->execute();
+		$stmt->bind_result($columnName, $columnType);
+		$numCols = 0;
+		while($stmt->fetch())
+		{
+			$numCols++;
+			$retValue .= $columnName;
+			$retValue .= COLDATATYPE_SEP;
+			$retValue .= $columnType;
 			$retValue .= COL_SEP;
 
 		}

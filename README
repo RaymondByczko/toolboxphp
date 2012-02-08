@@ -1,0 +1,20 @@
+RByczko, 2012-02-07, Feb 7, 2012
+
+The purpose of this repo is to contain a set of PHP utilities
+that serve a purpose in software development.  Essentially
+it should make life easier and faster.
+
+This can include anything from php code that looks at mysql
+databases, to general frameworks to help come up with a 
+web page fast.  (This is much better than coming up with
+a set of pages too slowly for an impatient client.
+
+Every utility is given its own directory in the toolboxphp
+repository.
+
+* hasdbchanged - a set of php files for querying into
+running mysql databases, and determines if the database has
+changed.  It is envisioned this would be a script running
+under crontab, so that you the developer can see if the
+database admin guy/gal has pulled the rug from under php
+code by changing column names etc. 
