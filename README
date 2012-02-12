@@ -1,4 +1,5 @@
 RByczko, 2012-02-07, Feb 7, 2012
+Change dates: 2012-02-12 - added ctlwebservice
 
 The purpose of this repo is to contain a set of PHP utilities
 that serve a purpose in software development.  Essentially
@@ -18,3 +19,10 @@ changed.  It is envisioned this would be a script running
 under crontab, so that you the developer can see if the
 database admin guy/gal has pulled the rug from under php
 code by changing column names etc. 
+
+* ctlwebservice - a demo code set for control something via
+a web service (SOAP).  The 'something' is a table whose
+height and angle can be adjusted.  (The table is assumed to
+be on a central axle and can be rotated.)  This code demonstrates
+using GET (or POST) along with SOAP and logging via syslog.
+Database capability will be added shortly.
