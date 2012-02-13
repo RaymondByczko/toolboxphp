@@ -1,5 +1,20 @@
 <?php
+/*
+ * author: Raymond Byczko raymondbyczko@att.net
+ * date: 2012-02-12.
+ * cservice.php: the purpose of this php code is to provide access to
+ * a web service, on a local or remote client, and adjust the
+ * height of a table.
+ *
+ * Since this code is not directly connected to a physical table,
+ * it will 'do something' like put an entry into a mysql database table.
+ *
+ * NOTE: the 'c' in cservice.php stands for ctl or Controller.
+ */
+	// TODO - sharedsecret will allow only secret aware clients
+	// to call the server, which knows the same secret.
 	// require_once('sharedsecret.inc');
+	require_once('lib/cxmlmessages.php');
 	// ini_set('display_errors', '1');
 	class CtlwebserviceLog
 	{
@@ -32,7 +47,7 @@
 			return new SoapFault("1", "adjustTableHeight:invalid-negative table height:randomrpcid=".$randomrpcid);
 		}
 		// More sanity check.
-		if ( !($units == 'mm')||($units == "inch") )
+		if ( !( ($units == 'mm')||($units == "inch") ) )
 		{
 
 			syslog(LOG_ERR, 'adjustTableHeight-error-units='.$units.":randomrpcid=".$randomrpcid);
@@ -48,6 +63,13 @@
 	function rotateTable($randomrpcid, $angle, $units)
 	{
 		syslog(LOG_INFO, 'rotateTable-start:randomrpcid='.$randomrpcid);
+		// Sanity check.
+		if ( !( ($units == 'radians')||($units == "degrees") ) )
+		{
+			syslog(LOG_ERR, 'rotateTable-error-units='.$units.":randomrpcid=".$randomrpcid);
+			return new SoapFault("3", "rotateTable: invalid units:randomrpcid=".$randomrpcid);
+		}
+		syslog(LOG_INFO, 'rotateTable-end:randomrpcid='.$randomrpcid);
 		return 'rotateTable:status:success';
 	}
 	function testSOAP()
@@ -58,6 +80,4 @@
 	$server->addFunction('adjustTableHeight');
 	$server->addFunction('rotateTable');
 	$server->handle();
-	// echo "server=".$server;
-	
 ?>
