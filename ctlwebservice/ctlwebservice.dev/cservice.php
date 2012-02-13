@@ -13,8 +13,12 @@
  */
 	// TODO - sharedsecret will allow only secret aware clients
 	// to call the server, which knows the same secret.
+
+	ini_set('display_errors', '1');
 	// require_once('sharedsecret.inc');
 	require_once('lib/cxmlmessages.php');
+	require_once('lib/dbservice.php');
+	require_once('test/testattributes.php');
 	// ini_set('display_errors', '1');
 	class CtlwebserviceLog
 	{
@@ -53,6 +57,20 @@
 			syslog(LOG_ERR, 'adjustTableHeight-error-units='.$units.":randomrpcid=".$randomrpcid);
 			return new SoapFault("2", "adjustTableHeight: invalid units:randomrpcid=".$randomrpcid);
 		}
+
+		$operationtime = date('Y-m-d H:i:s');
+		$result = 'success';
+		$objDBS = new DBService(); 
+		$objTA = new TestAttributes();
+		$objDBS->setInformation($objTA);
+		$objDBS->storeCtlOperation(
+			$randomrpcid,
+			$operationtime,
+			'adjustTableHeight'	/*$operation*/ /* varchar(20) */,
+			$newHeight		/*$movement*/ /* varchar(20) */,
+			$units			/*$unit*/ /* varchar(20) */,
+			$result /* varchar(20) */);
+	
 		syslog(LOG_INFO, 'adjustTableHeight-end:randomrpcid='.$randomrpcid);
 		return "adjustHeight:newHeight=".$newHeight.':status:success';
 	}
@@ -69,6 +87,19 @@
 			syslog(LOG_ERR, 'rotateTable-error-units='.$units.":randomrpcid=".$randomrpcid);
 			return new SoapFault("3", "rotateTable: invalid units:randomrpcid=".$randomrpcid);
 		}
+
+		$operationtime = date('Y-m-d H:i:s');
+		$result = 'success';
+		$objDBS = new DBService(); 
+		$objTA = new TestAttributes();
+		$objDBS->setInformation($objTA);
+		$objDBS->storeCtlOperation(
+			$randomrpcid,
+			$operationtime,
+			'rotateTable'	/*$operation*/ /* varchar(20) */,
+			$angle		/*$movement*/ /* varchar(20) */,
+			$units			/*$unit*/ /* varchar(20) */,
+			$result /* varchar(20) */);
 		syslog(LOG_INFO, 'rotateTable-end:randomrpcid='.$randomrpcid);
 		return 'rotateTable:status:success';
 	}

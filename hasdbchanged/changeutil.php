@@ -17,7 +17,9 @@
  * is natural I think to see, an automatic try/catch block right
  * on the surface of the public method.
  */
-require_once('IDBAttributes.inc');
+$rootDir = '/home/raymond/RByczko002_phpStuff/toolboxphp/hasdbchanged/';
+require_once($rootDir.'IDBAttributes.inc');
+require_once($rootDir.'dbsnapshot.php');
 define('COL_SEP', ':');
 define('COLDATATYPE_SEP', '#');
 define('TBL_SEP', ':');
@@ -25,7 +27,10 @@ define('TBL_SEP', ':');
 
 /*
  * DBBaseUtility: provides base operations for a mysqli based
- * implementation, to investigate the schema etc.
+ * implementation, to investigate the schema etc.  The information
+ * contained in this base class object is the schema item to be
+ * investigated OR it can contain where the schema snapshots are
+ * being stored.
  */
 class DBBaseUtility
 {
@@ -126,7 +131,7 @@ class TableUtility extends DBBaseUtility
 		}
 		return $retBasicFormat;
 	}
-	public function getBasicColumnDataType()
+	public function getBasicColumnDataType($format = "COLON_SEPERATED")
 	{
 		$retBasicCDT = "";
 		try {
@@ -139,7 +144,7 @@ class TableUtility extends DBBaseUtility
 			throw $e;
 		}
 		try {
-			$retBasicCDT = $this->p_getBasicColumnDataType();
+			$retBasicCDT = $this->p_getBasicColumnDataType($format);
 		}
 		catch (Exception $e)
 		{
@@ -157,6 +162,12 @@ class TableUtility extends DBBaseUtility
 			throw $e;
 		}
 		return $retBasicCDT;
+	}
+	public function getBasicColumnDataTypeDBSnapshot()
+	{
+		$retColDatatype = $this->getBasicColumnDataType("ARRAY");
+		$objDBSS = new DBSnapshot($retColDatatype);
+		return $objDBSS;
 	}
 
 	private function p_getBasicFormat()
@@ -190,9 +201,26 @@ class TableUtility extends DBBaseUtility
 		$stmt->close();
 		return $retValue;
 	}
-	private function p_getBasicColumnDataType()
+	// p_getBasicColumnDataType: returns the column names and
+	// each of the datatypes associated with each column, for
+	// the table specified by m_table in the database specified
+	// by m_database.  Different formats are entertained.
+	private function p_getBasicColumnDataType($format)
 	{
+		if ( !(	($format == 'COLON_SEPARATED') ||
+			($format == 'ARRAY')
+		))
+		{
+			throw new Exception("Unrecognized format"); // TODO - FIX
+		}
 		$retValue = "";
+		if ($format == "COLON_SEPARATED")
+		{
+		}
+		else if ($format == "ARRAY")
+		{
+			$retValue = array();
+		}
 		$query = "select COLUMN_NAME, COLUMN_TYPE from ";
 		$query .= "INFORMATION_SCHEMA.COLUMNS ";
 		$query .= "WHERE TABLE_NAME = ?";
@@ -207,13 +235,22 @@ class TableUtility extends DBBaseUtility
 		while($stmt->fetch())
 		{
 			$numCols++;
-			$retValue .= $columnName;
-			$retValue .= COLDATATYPE_SEP;
-			$retValue .= $columnType;
-			$retValue .= COL_SEP;
+			if ($format == 'COLON_SEPARATED')
+			{
+				$retValue .= $columnName;
+				$retValue .= COLDATATYPE_SEP;
+				$retValue .= $columnType;
+				$retValue .= COL_SEP;
+			}
+			if ($format == 'ARRAY')
+			{
+				$newElement = array("name"=>$columnName,
+						"type"=>$columnType);
+				$retValue[] = $newElement;
+			}
 
 		}
-		if ($numCols > 0)
+		if ( ($format== "COLON_SEPARATED") && ($numCols > 0) )
 		{
 			// Remove the last COL_SEP.
 			$lenRetValue = strlen($retValue);

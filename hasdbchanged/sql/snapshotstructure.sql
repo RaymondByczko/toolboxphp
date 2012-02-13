@@ -1,5 +1,5 @@
 CREATE TABLE DATABASE2 (id INT(20) AUTO_INCREMENT PRIMARY KEY,
-snapshottime TIMESTAMP UNIQUE,
+snapshottime TIMESTAMP,
 databasename varchar(20))
 ENGINE=InnoDB;
 
