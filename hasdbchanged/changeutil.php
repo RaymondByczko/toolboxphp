@@ -17,7 +17,8 @@
  * is natural I think to see, an automatic try/catch block right
  * on the surface of the public method.
  */
-$rootDir = '/home/raymond/RByczko002_phpStuff/toolboxphp/hasdbchanged/';
+// $rootDir = '/home/quickstart/mygithub/toolboxphp/hasdbchanged/';
+$rootDir = getenv('HDC_DOCROOT');
 require_once($rootDir.'IDBAttributes.inc');
 require_once($rootDir.'dbsnapshot.php');
 define('COL_SEP', ':');

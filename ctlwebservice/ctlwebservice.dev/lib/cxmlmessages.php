@@ -36,5 +36,33 @@
 			return $retXML;
 
 		}
+		static public function soapExceptionGenerated($statusReport, $fileName, $lineNumber, $otherInfo)
+		{
+			$retXML = '<?xml version="1.0" ?>'."\n";
+
+			$retXML .= '<ctlwebservicemessage>'."\n";
+			$retXML .= '<status>';
+			$retXML .= $statusReport;
+			$retXML .= '</status>'."\n";
+
+			$retXML .= '<reason>';
+			$retXML .= __METHOD__;
+			$retXML .= '</reason>'."\n";
+
+			$retXML .= '<phpfilename>';
+			$retXML .= $fileName;
+			$retXML .= '</phpfilename>'."\n";
+
+			$retXML .= '<phplinenumber>';
+			$retXML .= $lineNumber;
+			$retXML .= '</phplinenumber>'."\n";
+
+			$retXML .= '<otherinfo>';
+			$retXML .= $otherInfo;
+			$retXML .= '</otherinfo>'."\n";
+
+			$retXML .= '</ctlwebservicemessage>';
+			return $retXML;
+		}
 	}
 ?>
