@@ -1,5 +1,6 @@
 <?php
-require_once('../../hasdbchanged/changeutil.php');
+$docRoot = getenv('HDC_DOCROOT');
+require_once($docRoot.'changeutil.php');
 class DBService extends DBBaseUtility
 {
 	public function __construct()

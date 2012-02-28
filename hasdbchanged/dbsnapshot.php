@@ -1,5 +1,6 @@
 <?php
-$rootDir = '/home/raymond/RByczko002_phpStuff/toolboxphp/hasdbchanged/';
+// $rootDir = '/home/quickstart/mygithub/toolboxphp/hasdbchanged/';
+$rootDir = getenv('HDC_DOCROOT');
 require_once($rootDir.'idbchange.php');
 	class DBSnapshot implements IDBSnapshot
 	{

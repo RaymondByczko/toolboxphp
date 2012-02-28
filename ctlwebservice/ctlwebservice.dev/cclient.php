@@ -19,7 +19,9 @@
  * NOTE: the 'c' in cclient.php stands for ctl or Controller.
  */
 	ini_set('display_errors', '1');
-	require_once('lib/cxmlmessages.php');
+	// $rootDir='/home/lunar51/public_html/ctlwebservice/';
+	$rootDir=getenv('CWS_DOCROOT');
+	require_once($rootDir.'lib/cxmlmessages.php');
 	$newTableHeight = null;
 	$unitsTableHeight = null;
 	if ($_SERVER['REQUEST_METHOD'] == 'GET')
@@ -42,12 +44,32 @@
 		$newTableHeight = $_GET['TABLE_HEIGHT'];
 		$unitsTableHeight = $_GET['UNITS'];
 	}
-	$client = new SoapClient(null, array('location'=>"http://ctlwebservice.dev/cservice.php", 'uri'=>'http://ctlwebservice.dev', 'trace'=>1, 'exceptions'=>0));
+	try {
+		$client = new SoapClient(null, array('location'=>"http://www.lunarrays.com/ctlwebservice/cservice.php", 'uri'=>'http://www.lunarrays.com/ctlwebservice', 'trace'=>1, 'exceptions'=>1));
+	}
+	catch (Exception $e)
+	{
+		$emsg = $e->getMessage();
+		$retXML = CXmlMessages::soapExceptionGenerated('NOTOK', __FILE__, __LINE__, 'possible wrong soap location:exception_message='.$emsg);
+		header('Content-Type: text/xml');
+		echo "$retXML";
+		exit;
+}
 	// randomIpcId: generates a random rpc id number used in logs on
 	// both ends to facilitate multi-log coordination.
 	$randomIpcId = mt_rand();
 	// $ra = $client->__soapCall("adjustTableHeight", array("$randomIpcId",50, "mm"), array('soapaction'=>'adjustHeight2'));
-	$ra = $client->__soapCall("adjustTableHeight", array("$randomIpcId",$newTableHeight, $unitsTableHeight), array('soapaction'=>'adjustTableHeight'));
+	try {
+		$ra = $client->__soapCall("adjustTableHeight", array("$randomIpcId",$newTableHeight, $unitsTableHeight), array('soapaction'=>'adjustTableHeight'));
+	}
+	catch (Exception $e)
+	{
+		$emsg = $e->getMessage();
+		$retXML = CXmlMessages::soapExceptionGenerated('NOTOK', __FILE__, __LINE__, 'possible bad soap method:exception_message='.$emsg);
+		header('Content-Type: text/xml');
+		echo "$retXML";
+		exit;
+	}
 	if (is_soap_fault($ra))
 	{
 		// The following is interesting.  Might be useful.

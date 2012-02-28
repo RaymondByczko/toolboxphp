@@ -1,0 +1,5 @@
+SetEnv CWS_DOCROOT /<specify shared host dir here>/public_html/ctlwebservice/
+SetEnv HDC_DOCROOT /<specify shared host dir here>/public_html/hasdbchanged/
+SetEnv CWS_USER usernameformysqlnotvalid
+SetEnv CWS_PASSWORD passwordforaboveusernotvalid
+

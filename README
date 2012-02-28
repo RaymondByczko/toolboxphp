@@ -2,6 +2,8 @@ RByczko, 2012-02-07, Feb 7, 2012
 Change log:
 date: 2012-02-12 - added ctlwebservice
 date: 2012-02-13 - added some DB functionality to ctlwebservice
+date: 2013-02-14 - pushed code to shared server for a deployment test.
+To this end, used env variables in .htaccess (SetEnv).
 
 The purpose of this repo is to contain a set of PHP utilities
 that serve a purpose in software development.  Essentially
@@ -28,6 +30,7 @@ height and angle can be adjusted.  (The table is assumed to
 be on a central axle and can be rotated.)  This code demonstrates
 using GET (or POST) along with SOAP and logging via syslog.
 Database capability is included.  See the sql subdirectory
-for the table create script.
+for the table create script.  Deployment is based on
+environment variables.  See the file: .htaccess.
 
 * facebookapi - TODO
