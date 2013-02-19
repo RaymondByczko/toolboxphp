@@ -1,0 +1,27 @@
+
+
+Triple Helix Corporation Programmer Evaluation Exercise:
+---------------------------------------------------------------------------------
+
+Attached you will find an excel file.  Your task is to create a simple user interface 
+that allows a user to login and upload/parse this file to the system.
+ 
+The file should take the contents of the excel file and publish a graph
+of the data in a pie chart using the ‘Chartdirector’ library found here:
+http://www.advsofteng.com/download.html   (download and use the free 
+evaluation version for this task).  The pie chart should include the chart title, 
+data labels, and %-ages listed on the chart.  The parsing function should 
+have error trapping to prevent users from uploading bad data.
+ 
+Specific Objectives:
+- Code this task using a LAMP stack ONLY.
+- Provide fully documented source code when completed.
+- Provide a URL where your sample project is located for evaluation
+(include username/password to access the demo on your target system)  
+- User/Pass should be encrypted and authenticated against a database 
+record in a user table.
+- Describe the encryption scheme you used to protect the password and
+why you used it.
+- Provide# of hours it took to complete this task.
+
+-------------------------------------------------------------------------------------------

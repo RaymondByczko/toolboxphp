@@ -1,0 +1,6 @@
+@company self
+@author Raymond Byczko
+@file evaluation/test/README
+@note This directory contains two files which comprise an employment test.
+The first file, eval.txt, is a description of the test.  The second
+file, sample.xls, is a sample spreadsheet to be used in the test.
