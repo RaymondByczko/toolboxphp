@@ -2,8 +2,9 @@ RByczko, 2012-02-07, Feb 7, 2012
 Change log:
 date: 2012-02-12 - added ctlwebservice
 date: 2012-02-13 - added some DB functionality to ctlwebservice
-date: 2013-02-14 - pushed code to shared server for a deployment test.
+date: 2012-02-14 - pushed code to shared server for a deployment test.
 To this end, used env variables in .htaccess (SetEnv).
+date: 2013-02-18 - added dbimport and started populating it.
 
 The purpose of this repo is to contain a set of PHP utilities
 that serve a purpose in software development.  Essentially
@@ -34,3 +35,12 @@ for the table create script.  Deployment is based on
 environment variables.  See the file: .htaccess.
 
 * facebookapi - TODO
+
+* dbimport - this is a set of php code and apache2 files to allow
+database import to happen, but actually, it will provide more
+that that.  For example, it will allow excel spreadsheet data
+to be pushed up to a web site and then used to populate one
+of several types of relational or even NoSQL databases.
+Basically it allows the movement of data out of spreadsheets.
+Further, it provides reviewing spreadsheet data via various
+graphing utilities.  Its status is: incomplete, on-going.
