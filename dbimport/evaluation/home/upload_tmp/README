@@ -1,0 +1,10 @@
+@company self
+@author Raymond Byczko
+@file home/upload_tmp/README
+@start_date 2013-02-18 Feb 18
+@purpose This file serves to mark a location.  That is, under the home
+subdirectory will be the upload_tmp directory, which contains this
+README.  This directory is to temporary store uploaded temporary files
+before they are moved to their more permanent location.  Putting this
+file in git will insure the upload_tmp directory is present during
+deployment.

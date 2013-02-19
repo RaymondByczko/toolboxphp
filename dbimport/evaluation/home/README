@@ -1,0 +1,9 @@
+@company self
+@author Raymond Byczko
+@file evaluation/home/README
+@start_date 2013-02-18 Feb 18
+@note The directory containing this README contains the contents of the
+'home' web site to implement the requirements of the test, under
+evaluation/test.  These contents will be pushed (scp) up to a host
+where they will be the first layer to implement a web site (in other
+words, its 'home').

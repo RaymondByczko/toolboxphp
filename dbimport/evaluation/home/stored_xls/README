@@ -1,0 +1,10 @@
+@company self
+@author Raymond Byczko
+@file home/stored_xls/README
+@start_date 2013-02-18 Feb 18
+@purpose This file serves to mark a location.  That is, under the home
+subdirectory will be the stored_xls directory, which contains this
+README.  This directory is to permanently store uploaded files
+before they are processed, and something (e.g. a graph) is produced.
+Putting this file in git will insure the stored_xls directory is present during
+deployment.
