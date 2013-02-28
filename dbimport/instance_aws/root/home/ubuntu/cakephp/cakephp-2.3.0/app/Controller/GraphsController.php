@@ -4,7 +4,9 @@
 // @file GraphsController.ph
 // @purpose This is the graphs controller which allows uploading/processing
 // of xls spreadsheet files.
-// @status incomplete, rough, needs refinement
+// @change_log 2013-02-28 Feb 28, RByczko, Added produceimagefile, which works.
+// Will add this to git and further refine.  Status is accurate.
+// @status incomplete, working, rough, needs refinement
 ?>
 <?php
 	class GraphsController extends AppController {
@@ -148,9 +150,36 @@
 
 			# Output the chart
 			header("Content-type: image/png");
-			print($c->makeChart2(PNG));
+			$chartdata = $c->makeChart2(PNG);
+			// print($c->makeChart2(PNG));
+			$this->produceimagefile($chartdata);
+			print($chartdata);
 			} ///
 			return;
 		}
+		private function produceimagefile(&$imagedata)
+		{
+			$imagefile = tempnam('./stored_images/', 'graphs_');
+			// throw new Exception('Problem2 creating temp file');
+			syslog(LOG_DEBUG,'imagefile='.$imagefile);
+			if (!$imagefile)
+			{
+				// Error
+				throw new Exception('Problem creating temp file');
+			}
+			$fh = fopen($imagefile, 'w');
+			if (!$fh)
+			{
+				throw new Exception('Problem with opening file');
+			}
+			$fw = fwrite($fh, $imagedata);
+			if (!$fw)
+			{
+				fclose($fh);
+				throw new Exception('Problem with writing file');
+			}
+			fclose($fh);
+		}
+	
 	}
 ?>
