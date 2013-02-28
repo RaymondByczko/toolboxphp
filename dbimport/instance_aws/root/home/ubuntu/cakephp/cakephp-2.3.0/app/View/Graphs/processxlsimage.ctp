@@ -7,6 +7,9 @@
 	@purpose This file produces an image based on the file uploaded by the user
 	in index.php .
 	@status incomplete, rough, needs refinement
+	@change_history  2013-02-28 Feb 28, RByczko, Able to displayed generated image.
+	This is in line with 'thick' controller, 'thin' view. Let the controller
+	do most of the processing.
 */
 ?>
 <?php
@@ -19,67 +22,28 @@
 	// include 'PHPExcel/IOFactory.php';
 	// App::import('Vendor', 'PHPExcel/IOFactory', false, array('/home/ubuntu/toolboxphp/dbimport/extern/set03/extract_pt/Classes/'),'IOFactory.php');
 
-	 $retA1 = App::import('Vendor', 'PHPExcel_IOFactory', array('file'=>'PHPExcel'.DS.'IOFactory.php'));
-	echo 'retA1='.$retA1;
-	// return;
-	// App::import(null, 'PHPExcel_IOFactory', false, array('/home/ubuntu/toolboxphp/dbimport/extern/set03/extract_pt/Classes/PHPExcel'),'IOFactory.php');
-	// require_once("phpchartdir.php");
-	// $retA2 = App::import('Vendor', 'ChartDirector/phpchartdir');
-	$retA2 = App::import('Vendor', 'PieChart', array('file'=>'ChartDirector'.DS.'lib'.DS.'phpchartdir.php'));
-	echo 'retA2='.$retA2;
-	// echo 'dkeys='.$dkeys;
-	echo 'start of keys'."\n";
-	foreach ($pkeys as $singlekey=>$singlevalue)
-	{
-		echo $singlevalue."\n";
-	}
-	echo 'end of keys'."\n";
-	echo 'prams=';
-	pr($prams);
-	pr($prams['pass']);
-	pr($rdata);
-	echo 'rclass='.$rclass;
-	echo 'upload='.$upload;
-	echo 'stored='.$stored;
-	return;
 
+	echo 'pifile='.$pifile;
+	echo 'base_pifile='.$base_pifile;
+	echo $this->Html->image('../../stored_images/'.$base_pifile);
+
+	echo $this->Html->link('Logout here', array('controller'=>'users', 'action'=>'logout'));
+	return;
 	$debug = 0;
-	if ($debug) { var_dump($_FILES); }
-	// if (!is_uploaded_file($_FILES['xlsToProcess']['tmp_name']))
-	// var_dump($this->request->_method);
-	// var_dump($this->request->xlsToProcess);
-	var_dump($this->request->data);
-	// var_dump($this->request->data['Document']);
-	// var_dump($this->request->data['xlsToProcess']);
-	// var_dump($this);
-	// echo CakeRequest::data('tmp_name');
-	return;
-	if (!is_uploaded_file($this->data['file']['tmp_name']))
-	{
-		/* Error */
-		echo 'unable to process';
-	}
-	else
-	{
-		echo 'able to process';
-	}
-	return;
-	if ($debug) { echo 'name of file ='.$_FILES['xlsToProcess']['tmp_name']; }
-	if ($debug) { echo 'size of file ='.$_FILES['xlsToProcess']['size']; }
-
-	$inputFileName = "./stored_xls/".$_FILES['xlsToProcess']['name'];
-
-	/* Add suffix of timestamp.  Return new file name to user */
-	if (!move_uploaded_file($_FILES['xlsToProcess']['tmp_name'], $inputFileName))
-	{
-		echo 'unable to move file - check permissions';
-	}
+	$retA1 = App::import('Vendor', 'PHPExcel_IOFactory', array('file'=>'PHPExcel'.DS.'IOFactory.php'));
+	if ($debug) { echo 'retA1='.$retA1;}
+	$retA2 = App::import('Vendor', 'PieChart', array('file'=>'ChartDirector'.DS.'lib'.DS.'phpchartdir.php'));
+	if ($debug) { echo 'retA2='.$retA2;}
+	if ($debug) { echo 'rdata=';};
+	if ($debug) { pr($rdata);}
+	if ($debug) { echo 'upload='.$upload; }
+	if ($debug) { echo 'stored='.$stored; }
 
 	if ($debug)
 	{
-		echo 'Loading file ',pathinfo($inputFileName,PATHINFO_BASENAME),' (aka sample.xls) using IOFactory to identify the format<br />';
+		echo 'Loading file ',pathinfo($storedfilename,PATHINFO_BASENAME),' (aka sample.xls) using IOFactory to identify the format<br />';
 	}
-	$objPHPExcel = PHPExcel_IOFactory::load($inputFileName);
+	$objPHPExcel = PHPExcel_IOFactory::load($storedfilename);
 
 
 	if ($debug) { echo '<hr />'; }
