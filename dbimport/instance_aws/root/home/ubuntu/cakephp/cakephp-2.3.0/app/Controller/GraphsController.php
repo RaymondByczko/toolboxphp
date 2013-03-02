@@ -9,6 +9,9 @@
 // @status incomplete, working, rough, needs refinement
 // @change_log 2013-03-02 Mar 2, RByczko, Minor adjustments to produce
 // an imagefile, whose details are then handed to the view.
+// @change_log 2013-03-02 Mar 2, RByczko, Modifications to account for various
+// spreadsheet assumptions like a) first row has data or not b) usage
+// of first column (data or label).
 ?>
 <?php
 	class GraphsController extends AppController {
@@ -88,10 +91,39 @@
 			if ($debug) { echo 'item='.$item.'; count='.$count; }
 			$labels = array();
 			$data = array();
+
+			$heading = $this->request->data['Graph']['columnheading'];
+			$this->set('heading', $heading);
+			syslog(LOG_DEBUG,'heading='.$heading);
+			$skipUntil = -1;
+			if ($heading == 'notpresent')
+				$skipUntil = -1;
+			if ($heading == 'row1')
+				$skipUntil = 0;
+			if ($heading == 'row2')
+				$skipUntil = 1;
+
+
+			$columnusage = $this->request->data['Graph']['columnusage'];
+			syslog(LOG_DEBUG,'columnusage='.$columnusage);
+			$numRow = 0;
 			foreach ($sheetData as $key=>$value)
 			{
-				$labels[] = $value['A'];
-				$data[] = $value['B'];
+				$numRow++;
+				if ( ($numRow-1) <= $skipUntil)
+				{
+					continue;
+				}
+				if ($columnusage == 'alabel_bdata')
+				{
+					$labels[] = $value['A'];
+					$data[] = $value['B'];
+				}
+				if ($columnusage == 'adata_blabel')
+				{
+					$data[] = $value['A'];
+					$labels[] = $value['B'];
+				}
 			}
 			
 			if ($debug)

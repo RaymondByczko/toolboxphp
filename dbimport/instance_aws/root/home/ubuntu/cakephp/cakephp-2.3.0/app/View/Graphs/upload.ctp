@@ -8,6 +8,8 @@
   * through a php library.
   * @start_date 2013-02-18
   * @work_history 2013-02-18 Feb 18 Initial check-in of this file into git.
+  * @work_history 2013-03-04 Mar 4 Adjust columnheadings associative array
+  * to account for start row in spreadsheet. Added columnusage input.
   * @status incomplete
   * @todo login, spread sheet particulars (does the data start with
   * the first row, or does the first row contain column headers?
@@ -20,13 +22,13 @@
   <input type="submit" value="Upload">
 </form>
 -->
-<?php echo $this->Form->create('Graph', array('action'=>'processxlsimage', 'type'=>'file', 'name'=>'xlstoprocess')); ?>
-<?php // echo $this->Form->create('Graph', array('action'=>'processxlsimage', 'type'=>'file', 'name'=>'xlsToProcess')); ?>
+<?php echo $this->Form->create('Graph', array('action'=>'processxlsimage', 'type'=>'file', 'name'=>'xlstoprocess', 'label'=>'XLS2 file:')); ?>
 
-<?php // echo $this->Form->input(null, array('type'=>'hidden', 'name'=>'MAX_FILE_SIZE', 'value'=>'100000')); ?>
-<?php  //// echo $this->Form->input('xlstoprocess', array('type'=>'file', 'name'=>'xlsToProcess', 'value'=>'100000')); ?>
-
-<?php  echo $this->Form->file('xlstoprocess'); ?>
+<?php // echo $this->Form->create('Graph', array('action'=>'processxlsimage', )); ?>
+<?php  echo $this->Form->file('xlstoprocess', array('label'=>'XLS file:')); ?>
+<?php echo $this->Form->input('columnheading', array('options'=>array('notpresent'=>'No Present','row1'=>'Row 1','row2'=>'Row 2'), 'label'=>'Column Heading Location')); ?>
+<?php echo $this->Form->input('columnusage', array('options'=>array('alabel_bdata'=>'Col. A label','adata_blabel'=>'Col. B label'), 'label'=>'Column Usage')); ?>
 <?php echo $this->Form->end('Upload'); ?>
+
 
 <?php echo $this->Html->link('Logout here', array('controller'=>'users', 'action'=>'logout')); ?>
