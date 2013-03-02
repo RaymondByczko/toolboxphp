@@ -7,6 +7,8 @@
 // @change_log 2013-02-28 Feb 28, RByczko, Added produceimagefile, which works.
 // Will add this to git and further refine.  Status is accurate.
 // @status incomplete, working, rough, needs refinement
+// @change_log 2013-03-02 Mar 2, RByczko, Minor adjustments to produce
+// an imagefile, whose details are then handed to the view.
 ?>
 <?php
 	class GraphsController extends AppController {
@@ -55,9 +57,8 @@
 				$this->set('stored', 'Success in storage');
 			}
 			$this->set('storedfilename', $storedfilename);
-			// $this->response->body = '<pre>No view here';
-			// return $this->response;
-			$this->response->type('png');
+			//// RAB 2013-02-28
+			//// $this->response->type('png');
 			if (1==1)
 			{ ///
 
@@ -100,8 +101,6 @@
 				echo 'data'."\n";
 				var_dump($data);
 			}
-			// return 0;
-
 
 			# The data for the pie chart
 			// $data = array(35, 30, 25, 7, 6, 5, 4, 3, 2, 1);
@@ -149,15 +148,21 @@
 			$c->setData($data, $labels);
 
 			# Output the chart
-			header("Content-type: image/png");
+			//// RAB 2013-02-28
+			// header("Content-type: image/png");
 			$chartdata = $c->makeChart2(PNG);
-			// print($c->makeChart2(PNG));
-			$this->produceimagefile($chartdata);
-			print($chartdata);
+			$pifile = null;
+			$this->produceimagefile($chartdata, $pifile);
+			//// RAB 2013-02-28
+			// print($chartdata);
+			$this->set('pifile', $pifile);
+			$path_parts = pathinfo($pifile);
+			$base_pifile = $path_parts['basename'];
+			$this->set('base_pifile', $base_pifile);
 			} ///
 			return;
 		}
-		private function produceimagefile(&$imagedata)
+		private function produceimagefile(&$imagedata /* in */, &$ifile /* out */)
 		{
 			$imagefile = tempnam('./stored_images/', 'graphs_');
 			// throw new Exception('Problem2 creating temp file');
@@ -179,6 +184,7 @@
 				throw new Exception('Problem with writing file');
 			}
 			fclose($fh);
+			$ifile = $imagefile;
 		}
 	
 	}
