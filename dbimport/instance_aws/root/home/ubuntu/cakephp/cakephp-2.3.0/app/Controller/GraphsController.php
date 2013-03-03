@@ -12,6 +12,8 @@
 // @change_log 2013-03-02 Mar 2, RByczko, Modifications to account for various
 // spreadsheet assumptions like a) first row has data or not b) usage
 // of first column (data or label).
+// @change_log 2013-03-02 Mar 2, RByczko, Rendered error_processxlsimage
+// when an error is encountered in that method.
 ?>
 <?php
 	class GraphsController extends AppController {
@@ -37,6 +39,11 @@
 			if (!is_uploaded_file($tmpfile))
 			{
 				$this->set('upload', 'Error in uploading');
+				$msg = 'is_uploaded_file failure'."\n";
+				$msg .= 'details'."\n";
+				$msg .= '...tmpfile='.$tmpfile."\n";
+				$this->set('msg', $msg);
+				$this->render('error_processxlsimage');
 				return;
 			}
 			else
@@ -53,6 +60,14 @@
 			if (!move_uploaded_file($tmpfile, $storedfilename))
 			{
 				$this->set('stored', 'unable to move file - check permissions');
+
+				$msg='move_uploaded_file failure'."\n";
+				$msg.='details'."\n";
+				$msg.='...tmpfile='.$tmpfile."\n";
+				$msg.='...storedfilename='.$storedfilename."\n";
+				$this->set('upload', 'Error in uploading');
+				$this->set('msg', $msg);
+				$this->render('error_processxlsimage');
 				return;
 			}
 			else
