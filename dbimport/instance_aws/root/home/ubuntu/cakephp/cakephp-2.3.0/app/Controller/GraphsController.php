@@ -14,6 +14,8 @@
 // of first column (data or label).
 // @change_log 2013-03-02 Mar 2, RByczko, Rendered error_processxlsimage
 // when an error is encountered in that method.
+// @change_log 2013-03-09 Mar 9, RByczko, Save file/image details when
+// producing output for processxlsimage.
 ?>
 <?php
 	class GraphsController extends AppController {
@@ -22,7 +24,7 @@
 		public function beforeFilter() {
 			parent::beforeFilter();
 		}
-		public function upload()
+		public function upload($user_id = null)
 		{
 		}
 		public function processxlsimage()
@@ -206,6 +208,14 @@
 			$path_parts = pathinfo($pifile);
 			$base_pifile = $path_parts['basename'];
 			$this->set('base_pifile', $base_pifile);
+			$user_id = $this->Auth->user('id');
+			syslog(LOG_DEBUG, 'user_id(2)='.$user_id);
+			$this->Graph->save(array(
+				'user_id'=>$user_id,
+				'filename_xls'=>$storedfilename,
+				'filename_image'=>$pifile
+				)
+				);
 			} ///
 			return;
 		}
