@@ -16,6 +16,8 @@
 // when an error is encountered in that method.
 // @change_log 2013-03-09 Mar 9, RByczko, Save file/image details when
 // producing output for processxlsimage.
+// @change_log 2013-03-09 Mar 9, RByczko, Added history feature so each
+// user can see what they have uploaded.
 ?>
 <?php
 	class GraphsController extends AppController {
@@ -23,6 +25,18 @@
 
 		public function beforeFilter() {
 			parent::beforeFilter();
+		}
+		public function history($user_id = null)
+		{
+			$user_id = $this->Auth->user('id');
+			syslog(LOG_DEBUG, 'user_id(3)='.$user_id);
+			$user_history = $this->Graph->find('all', 
+				array(
+				'conditions'=>array('Graph.user_id'=>$user_id),
+				'fields'=>array('Graph.id','Graph.filename_xls', 'Graph.filename_image')
+				)
+			);
+			$this->set('user_history', $user_history);
 		}
 		public function upload($user_id = null)
 		{
