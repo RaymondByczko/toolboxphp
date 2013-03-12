@@ -10,6 +10,7 @@
   * @work_history 2013-02-18 Feb 18 Initial check-in of this file into git.
   * @work_history 2013-03-04 Mar 4 Adjust columnheadings associative array
   * to account for start row in spreadsheet. Added columnusage input.
+  * @work_history 2013-03-11 Mar 11 Added graph type.
   * @status incomplete
   * @todo login, spread sheet particulars (does the data start with
   * the first row, or does the first row contain column headers?
@@ -28,6 +29,7 @@
 <?php  echo $this->Form->file('xlstoprocess', array('label'=>'XLS file:')); ?>
 <?php echo $this->Form->input('columnheading', array('options'=>array('notpresent'=>'No Present','row1'=>'Row 1','row2'=>'Row 2'), 'label'=>'Column Heading Location')); ?>
 <?php echo $this->Form->input('columnusage', array('options'=>array('alabel_bdata'=>'Col. A label','adata_blabel'=>'Col. B label'), 'label'=>'Column Usage')); ?>
+<?php echo $this->Form->input('graphtype', array('options'=>array('piechart'=>'Pie chart','bargraph'=>'Bar graph'), 'label'=>'Type of graph')); ?>
 <?php echo $this->Form->end('Upload'); ?>
 
 

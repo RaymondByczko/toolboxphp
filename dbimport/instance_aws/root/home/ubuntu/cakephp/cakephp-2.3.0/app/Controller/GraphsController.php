@@ -18,6 +18,11 @@
 // producing output for processxlsimage.
 // @change_log 2013-03-09 Mar 9, RByczko, Added history feature so each
 // user can see what they have uploaded.
+// @change_log 2013-03-11 Mar 11, RByczko, Added piechart and bargraph
+// methods to offer more ways of representing data. The signatures of
+// each are as follows:
+//	piechart($labels, $data, &$pifile)
+//	bargraph($labels, $data, &$pifile)
 ?>
 <?php
 	class GraphsController extends AppController {
@@ -165,12 +170,61 @@
 				var_dump($data);
 			}
 
-			# The data for the pie chart
-			// $data = array(35, 30, 25, 7, 6, 5, 4, 3, 2, 1);
+			$graphtype = $this->request->data['Graph']['graphtype'];
+			if ($graphtype == 'piechart')
+			{
+				$this->piechart($labels, $data, &$pifile);
+			}
+			if ($graphtype == 'bargraph')
+			{
+				$this->bargraph($labels, $data, &$pifile);
+			}
 
-			# The labels for the pie chart
-			// $labels = array("Labor", "Production", "Facilities", "Taxes", "Misc", "Legal",
-			//     "Insurance", "Licenses", "Transport", "Interest");
+			$this->set('pifile', $pifile);
+			$path_parts = pathinfo($pifile);
+			$base_pifile = $path_parts['basename'];
+			$this->set('base_pifile', $base_pifile);
+			$user_id = $this->Auth->user('id');
+			syslog(LOG_DEBUG, 'user_id(2)='.$user_id);
+			$this->Graph->save(array(
+				'user_id'=>$user_id,
+				'filename_xls'=>$storedfilename,
+				'filename_image'=>$pifile
+				)
+				);
+			} ///
+			return;
+		}
+		private function produceimagefile(&$imagedata /* in */, &$ifile /* out */)
+		{
+			$imagefile = tempnam('./stored_images/', 'graphs_');
+			// throw new Exception('Problem2 creating temp file');
+			syslog(LOG_DEBUG,'imagefile='.$imagefile);
+			if (!$imagefile)
+			{
+				// Error
+				throw new Exception('Problem creating temp file');
+			}
+			$fh = fopen($imagefile, 'w');
+			if (!$fh)
+			{
+				throw new Exception('Problem with opening file');
+			}
+			$fw = fwrite($fh, $imagedata);
+			if (!$fw)
+			{
+				fclose($fh);
+				throw new Exception('Problem with writing file');
+			}
+			fclose($fh);
+			$ifile = $imagefile;
+		}
+
+		private function piechart(
+					$labels /*in*/,
+					$data /*in*/,
+					&$pifile /*out*/)
+		{
 
 			# Create a PieChart object of size 560 x 270 pixels, with a golden background and a 1
 			# pixel 3D border
@@ -216,46 +270,20 @@
 			$chartdata = $c->makeChart2(PNG);
 			$pifile = null;
 			$this->produceimagefile($chartdata, $pifile);
-			//// RAB 2013-02-28
-			// print($chartdata);
-			$this->set('pifile', $pifile);
-			$path_parts = pathinfo($pifile);
-			$base_pifile = $path_parts['basename'];
-			$this->set('base_pifile', $base_pifile);
-			$user_id = $this->Auth->user('id');
-			syslog(LOG_DEBUG, 'user_id(2)='.$user_id);
-			$this->Graph->save(array(
-				'user_id'=>$user_id,
-				'filename_xls'=>$storedfilename,
-				'filename_image'=>$pifile
-				)
-				);
-			} ///
-			return;
 		}
-		private function produceimagefile(&$imagedata /* in */, &$ifile /* out */)
+
+		private function bargraph(
+					$labels /*in*/,
+					$data /*in*/,
+					&$pifile /*out*/)
 		{
-			$imagefile = tempnam('./stored_images/', 'graphs_');
-			// throw new Exception('Problem2 creating temp file');
-			syslog(LOG_DEBUG,'imagefile='.$imagefile);
-			if (!$imagefile)
-			{
-				// Error
-				throw new Exception('Problem creating temp file');
-			}
-			$fh = fopen($imagefile, 'w');
-			if (!$fh)
-			{
-				throw new Exception('Problem with opening file');
-			}
-			$fw = fwrite($fh, $imagedata);
-			if (!$fw)
-			{
-				fclose($fh);
-				throw new Exception('Problem with writing file');
-			}
-			fclose($fh);
-			$ifile = $imagefile;
+			$c = new XYChart(250, 250);
+			$c->setPlotArea(30, 20, 200, 200);
+			$c->addBarLayer($data);
+			$c->xAxis->setLabels($labels);
+			$chartdata = $c->makeChart2(PNG);
+			$pifile = null;
+			$this->produceimagefile($chartdata, $pifile);
 		}
 	
 	}
