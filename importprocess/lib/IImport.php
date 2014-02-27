@@ -6,6 +6,11 @@
   * @purpose To specify the interface for an import and process 
   * program.
   */
+
+// @TODO consider use of namespace here to put this into its own
+// library.
+// namespace lib;
+
 interface IImport
 {
 	/**
