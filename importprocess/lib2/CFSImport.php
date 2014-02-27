@@ -1,4 +1,26 @@
 <?php
+/**
+  * @file lib2/CFSImport.php
+  * @company self
+  * @author Raymond Byczko
+  * @purpose To provide a FileSystem based import mechanism.
+  * One line is read at a time (I know..inefficient) and various
+  * metrics are calculated during one pass.
+  *
+  * Besides a solution with fgetcsv, this solution prototypes something
+  * called a transformation, whereby a new composite virtual column
+  * is made from 1 or more real columns in the csv data.
+  * Further, tokens, like a dash can be inserted at any point to create
+  * the new virtual column.
+  * @start_date 2014-02-26 Feb 26
+  * @status Incomplete - not all desired metrics (quantity) are calculated.
+  * Further, a few additional methods have to be added to provide service
+  * to the client code.  Lastly, a buffer_fgetcsv needs to be written,
+  * and abstracted to a base class, so we don't read 1 line at a time,
+  * while still conserving memory.
+  */
+
+
 class CFSImport
 {
 	/**
@@ -26,6 +48,11 @@ class CFSImport
 	  * built as the Location associated array is.
 	  */
 	private $m_EmployeeS = array();
+
+	/**
+	  * m_errorList: is an array of arrays.  Each subarray has keys: line, errorFound, ignored.
+	  */
+	private $m_errorList = array();
 	public function __construct($filename)
 	{
 		$this->m_filename = $filename;
@@ -40,6 +67,7 @@ class CFSImport
 		if (!texists)
 		{
 			$this->transformations[$key] = array();
+			$this->transformations[$key][0] = array('status'=>'open');
 		}
 	}
 	public function add_transformation_c($key, $column, $start, $end)
@@ -47,7 +75,21 @@ class CFSImport
 		$texists = array_key_exists($key, $this->transformations);
 		if (texists)
 		{
+			// @TODO test to determine if status is open.
 			$this->transformations[$key][] = array('type'=>'c','column'=>$column, 'start'=>$start, 'end'=>$end);
+		}
+		else
+		{
+			throw Exception('initialize tranformation with init_transformation');
+		}
+	}
+	public function add_transformation_l($key, $column, $left)
+	{
+		$texists = array_key_exists($key, $this->transformations);
+		if (texists)
+		{
+			// @TODO test to determine if status is open.
+			$this->transformations[$key][] = array('type'=>'l','column'=>$column, 'left'=>$left);
 		}
 		else
 		{
@@ -59,7 +101,20 @@ class CFSImport
 		$texists = array_key_exists($key, $this->transformations);
 		if (texists)
 		{
+			// @TODO test to determine if status is open.
 			$this->transformations[$key][] = array('type'=>'t','token'=>$token);
+		}
+		else
+		{
+			throw Exception('initialize tranformation with init_transformation');
+		}
+	}
+	public function close_transformation($key)
+	{
+		$texists = array_key_exists($key, $this->transformations);
+		if (texists)
+		{
+			$this->transformations[$key][0] = array('status'=>'closed');
 		}
 		else
 		{
@@ -84,7 +139,13 @@ class CFSImport
 				}
 			}
 			// Process each line
-			while (($data = fgetcsv($handle, 1, ",")) !== FALSE) {
+			while (($data = fgetcsv($handle)) !== FALSE) {
+				$row++;
+				if (count($data) != count($this->m_expectedfields))
+				{
+					$this->m_errorList[] = array('line'=>$row, 'errorFound'=>'number of fields not correct', 'ignored'=>true);				
+					continue;
+				}
 				$StartTime = $data[0];
 				$EndTime = $data[1];
 				$Employee = $data[2];
