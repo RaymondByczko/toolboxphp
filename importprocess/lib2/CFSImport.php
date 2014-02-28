@@ -20,6 +20,8 @@
   * @change_history 2014-02-27 Feb 27; RByczko; Added method:
   * get_QuantityPerEmployee() with associated private data members. Also
   * added error_list for error reporting.
+  * @change_history 2014-02-27 Feb 27; RByczko; Added transormation (virtual
+  * columns) enhancements.
   * @status Incomplete - not all desired metrics (quantity) are calculated.
   * Further, although additional methods have been added to provide service
   * to the client code, a way of resetting an object can be implemented so
@@ -59,6 +61,13 @@ class CFSImport
 
 	private $m_QuantityPerEmployee = array();
 
+
+	/**
+	  * m_QuantityPerTransform: a number of virtual columns could have been made
+	  * been made with the *_transformation_* methods.  This variable holds the
+	  * Quantity per virtual column. 
+	  */
+	private $m_QuantityPerTransform = array();
 	/**
 	  * m_errorList: is an array of arrays.  Each subarray has keys: line, errorFound, ignored.
 	  */
@@ -87,13 +96,18 @@ class CFSImport
 	{
 		return $this->m_QuantityPerEmployee;
 	}
+
+	public function get_QuantityPerTransform()
+	{
+		return $this->m_QuantityPerTransform;
+	}
 	public function init_transformation($key)
 	{
 		$texists = array_key_exists($key, $this->m_transformations);
 		if (!$texists)
 		{
 			$this->m_transformations[$key] = array();
-			$this->m_transformations[$key][0] = array('status'=>'open');
+			$this->m_transformations[$key][0] = array('type'=>'s','status'=>'open');
 		}
 	}
 	public function add_transformation_c($key, $column, $start, $end)
@@ -140,12 +154,41 @@ class CFSImport
 		$texists = array_key_exists($key, $this->m_transformations);
 		if ($texists)
 		{
-			$this->m_transformations[$key][0] = array('status'=>'closed');
+			$this->m_transformations[$key][0] = array('type'=>'s','status'=>'closed');
 		}
 		else
 		{
 			throw new Exception('initialize tranformation with init_transformation');
 		}
+	}
+	public function get_transformations()
+	{
+		$transformations = array_keys($this->m_transformations);
+		return $transformations;
+	}
+	public function get_transformation_value($key, $data_csvline)
+	{
+		$value = '';
+		foreach ($this->m_transformations[$key] as $key=>$value_transformation)
+		{
+			// @TODO polymorphism is happening here.  Refactor into interface
+			// with derived classes.
+			if ($value_transformation['type'] == 'l')
+			{
+				$column = $value_transformation['column'];
+				$left = $value_transformation['left'];
+				$correctIndex = array_search($column, $this->m_expectedfields);
+				$columnVal = $data_csvline[$correctIndex];
+				$columnPiece = substr($columnVal, 0, $left);
+				$value .= $columnPiece;
+			}
+			if ($value_transformation['type'] == 't')
+			{
+				$token = $value_transformation['token'];
+				$value .= $token;
+			}
+		}
+		return $value;
 	}
 	public function process_file()
 	{
@@ -165,6 +208,14 @@ class CFSImport
 					throw new Exception('num_afields='.$num_afields.';num_efields='.$num_efields);
 				}
 			}
+
+			// Initialize transformation quantity totals, but not individual ones.
+			$tran = $this->get_transformations();
+			foreach ($tran as $key_tran=>$value_tran)
+			{
+				$this->m_QuantityPerTransform[$value_tran] = array();
+			}
+
 			// Process each line
 			while (($data = fgetcsv($handle)) !== FALSE) {
 				syslog(LOG_DEBUG,'processing a line');
@@ -183,6 +234,22 @@ class CFSImport
 				$Quantity = $data[5];
 				syslog(LOG_DEBUG,'...Employee='.$Employee);
 
+				// Take care of combined columns (virtual columns)
+				$tran = $this->get_transformations();
+				foreach ($tran as $key_tran=>$virt_col)
+				{
+					$val = $this->get_transformation_value($virt_col, $data);
+
+					if (array_key_exists($val,$this->m_QuantityPerTransform[$virt_col]))
+					{
+						$this->m_QuantityPerTransform[$virt_col][$val] += intval($Quantity);
+					}
+					else
+					{
+
+						$this->m_QuantityPerTransform[$virt_col][$val] = intval($Quantity);
+					}
+				}
 				// Store total Quantity per Employee.
 				// First insure it can be added.
 				if (!is_numeric($Quantity))
@@ -288,6 +355,27 @@ class CFSImport
 		}
 		echo '<p>';
 	}
+
+	/**
+	  * quantity_per_transform: displays the quantity total per transormation.
+	  * This method also demonstrates how get_QuantityPerTransform is utilized.
+	  */
+	public function quantity_per_transform()
+	{
+		echo '<p>';
+		echo '<p>QUANTITY PER TRANSFORM';
+		$qpt = $this->get_QuantityPerTransform();
+		foreach ($qpt as $key_transform=>$value_QuantityArray)
+		{
+			echo '<p>VirtualColumn='.$key_transform;
+			foreach ($value_QuantityArray as $key_virtcolval=>$quantity)
+			{
+				echo '<p>...Quantity(total)='.$quantity.' for '.$key_virtcolval;
+			}
+		}
+		echo '<p>';
+	}
+
 	/**
 	  * error_list: displays the errors found in processing the csv file.
 	  * This method also shows how get_errorList is utilized.

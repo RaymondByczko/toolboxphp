@@ -27,8 +27,8 @@ $cfs->set_expectedfields($ef);
 // two real fields, SKU and Location.
 $cfs->init_transformation('department');
 $cfs->add_transformation_l('department', 'SKU', 2);
-$cfs->add_transformation_l('department', 'Location', 5);
 $cfs->add_transformation_t('department', '-');
+$cfs->add_transformation_l('department', 'Location', 5);
 $cfs->close_transformation('department');
 
 $cfs->process_file();
@@ -53,6 +53,7 @@ foreach ($es as $key_Employee=>$value_StartTimeArray)
 $cfs->employee_start_data();
 $cfs->employee_location_data();
 $cfs->quantity_per_employee();
+$cfs->quantity_per_transform();
 $cfs->error_list();
 echo '<p>test02.php-success'."\n";
 } catch (Exception $eobj)
