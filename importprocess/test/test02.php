@@ -4,6 +4,9 @@
   * @company self
   * @author Raymond Byczko
   * @purpose To provide a test harness for CFSImport.
+  * @change_history 2014-02-27 Feb27; Added sub-test for quantity
+  * per employee.  Added sub-test for error_list for
+  * error detection.
   * @status Incomplete - this code runs. The assignment
   * of $filename needs to be researched.
   */
@@ -49,6 +52,8 @@ foreach ($es as $key_Employee=>$value_StartTimeArray)
 }
 $cfs->employee_start_data();
 $cfs->employee_location_data();
+$cfs->quantity_per_employee();
+$cfs->error_list();
 echo '<p>test02.php-success'."\n";
 } catch (Exception $eobj)
 {

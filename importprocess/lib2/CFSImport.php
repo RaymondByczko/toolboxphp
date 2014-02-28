@@ -17,6 +17,9 @@
   * employee_location_data. Fixed a number of bugs (incorrect names for
   * member variables), fixed throw call, fixed logic for m_EmployeeS and
   * for m_EmployeeL.
+  * @change_history 2014-02-27 Feb 27; RByczko; Added method:
+  * get_QuantityPerEmployee() with associated private data members. Also
+  * added error_list for error reporting.
   * @status Incomplete - not all desired metrics (quantity) are calculated.
   * Further, although additional methods have been added to provide service
   * to the client code, a way of resetting an object can be implemented so
@@ -54,6 +57,8 @@ class CFSImport
 	  */
 	private $m_EmployeeS = array();
 
+	private $m_QuantityPerEmployee = array();
+
 	/**
 	  * m_errorList: is an array of arrays.  Each subarray has keys: line, errorFound, ignored.
 	  */
@@ -61,6 +66,10 @@ class CFSImport
 	public function __construct($filename)
 	{
 		$this->m_filename = $filename;
+	}
+	public function get_errorList()
+	{
+		return $this->m_errorList;
 	}
 	public function set_expectedfields($ef)
 	{
@@ -73,6 +82,10 @@ class CFSImport
 	public function get_EmployeeL()
 	{
 		return $this->m_EmployeeL;
+	}
+	public function get_QuantityPerEmployee()
+	{
+		return $this->m_QuantityPerEmployee;
 	}
 	public function init_transformation($key)
 	{
@@ -169,6 +182,23 @@ class CFSImport
 				$SKU = $data[4];
 				$Quantity = $data[5];
 				syslog(LOG_DEBUG,'...Employee='.$Employee);
+
+				// Store total Quantity per Employee.
+				// First insure it can be added.
+				if (!is_numeric($Quantity))
+				{
+					$this->m_errorList[] = array('line'=>$row, 'errorFound'=>'Quantity is not numeric', 'ignored'=>true);				
+					continue;
+				}
+				// Second add to current sum total.
+				if (array_key_exists($Employee,$this->m_QuantityPerEmployee))
+				{
+					$this->m_QuantityPerEmployee[$Employee] += intval($Quantity);
+				}
+				else
+				{
+					$this->m_QuantityPerEmployee[$Employee] = intval($Quantity);
+				}
 				// Store Location per Employee.
 				if (array_key_exists($Employee,$this->m_EmployeeL))
 				{
@@ -238,6 +268,52 @@ class CFSImport
 			{
 				echo '<p>...'.$value_Location;
 			}
+		}
+		echo '<p>';
+	}
+
+	/**
+	  * quantity_per_employee: displays the quantity total per employee.
+	  * This method also demonstrates how get_QuantityPerEmployee is utilized.
+	  */
+	public function quantity_per_employee()
+	{
+		echo '<p>';
+		echo '<p>QUANTITY PER EMPLOYEE';
+		$qpe = $this->get_QuantityPerEmployee();
+		foreach ($qpe as $key_Employee=>$value_Quantity)
+		{
+			echo '<p>Employee='.$key_Employee;
+			echo '<p>...Quantity(total)='.$value_Quantity;
+		}
+		echo '<p>';
+	}
+	/**
+	  * error_list: displays the errors found in processing the csv file.
+	  * This method also shows how get_errorList is utilized.
+	  */
+	public function error_list()
+	{
+		echo '<p>';
+		echo '<p>ERROR LIST';
+		$el = $this->get_errorList();
+		foreach ($el as $key=>$value_ErrorArray)
+		{
+			echo '<p>-------';
+			echo '<p>Error:'.$key;
+			
+	  		$ln = $value_ErrorArray['line'];
+			$ef = $value_ErrorArray['errorFound'];
+			$ig = $value_ErrorArray['ignored'];
+
+			echo '<p>...line='.$ln;
+			echo '<p>...errorFound='.$ef;
+			echo '<p>...ignored='.$ig;
+		}
+		if (count($el) == 0)
+		{
+			echo '<p>-------';
+			echo '<p>...no errors';
 		}
 		echo '<p>';
 	}
