@@ -53,6 +53,11 @@ class CYear {
         11=>30,
         12=>31
     );   
+    /**
+     * Determines if a certain year is a leap year.
+     * @param int $y represents a year
+     * @return boolean
+     */
     static public function isLeapYear($y)
     {
         $leapYear = null;
@@ -73,6 +78,14 @@ class CYear {
         }
         return $leapYear;
     }
+    /**
+     * Calculates number of days from Jan 1 of a certain year to any day in that year.
+     * @param int $m representing months 1 - 12 inclusive
+     * @param int $d representing days (adjusted per month and leap year)
+     * @param int $y representing the year (1900 and after)
+     * @return int number of days from Jan 1 to data specified, inclusive.
+     * @throws Exception
+     */
      public function daysToDate($m, $d, $y)
      {
          $leapYear = self::isLeapYear($y);
@@ -85,12 +98,36 @@ class CYear {
          {
              $daysPerMonth = self::$m_daysPerMonthReg;
          }
+         if (($m<1) || ($m>12))
+         {
+             throw Exception('m is not a valid month;m='.$m);
+         }
+         if (($d<0)||($d>$daysPerMonth[$m]))
+         {
+             throw Exception('d is not a valid day for that month; d='.$d.', m='.$m);
+         }
          $sumDays = 0;
          for ($i=1; $i< $m; $i++)
          {
              $sumDays += $daysPerMonth[$i];
          }
          $sumDays += $d;
+         return $sumDays;
+     }
+     public function days1900ToDate($m, $d, $y)
+     {
+         $sumDays = 0;
+         for ($i=1900; $i++; $i<$y)
+         {
+             if (self::isLeapYear($i))
+             {
+                 $sumDays += 366;
+             }
+             else
+             {
+                 $sumDays += 365;
+             }
+         }
          return $sumDays;
      }
     

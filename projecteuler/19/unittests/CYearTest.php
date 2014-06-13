@@ -55,5 +55,13 @@ class CYearTest extends PHPUnit_Framework_TestCase {
         $numDays2 = $this->object->daysToDate(2, 1, 1900);
         $this->assertTrue($numDays2 == 32);
     }
+    
+    public function testDays1900ToDate()
+    {
+        $numDays1 = $this->object->days1900ToDate(1, 10, 1900);
+        $this->assertTrue($numDays1 == 10);
+        $numDays2 = $this->object->days1900ToDate(1, 11, 1901);
+        $this->assertTrue($numDays2 == 377); 
+    }
 
 }
