@@ -117,7 +117,7 @@ class CYear {
      public function days1900ToDate($m, $d, $y)
      {
          $sumDays = 0;
-         for ($i=1900; $i++; $i<$y)
+         for ($i=1900; $i<$y; $i++)
          {
              if (self::isLeapYear($i))
              {
@@ -128,7 +128,10 @@ class CYear {
                  $sumDays += 365;
              }
          }
+         $lastYearsDays = $this->daysToDate($m, $d, $y);
+         $sumDays += $lastYearsDays;
          return $sumDays;
      }
     
 }
+?>
