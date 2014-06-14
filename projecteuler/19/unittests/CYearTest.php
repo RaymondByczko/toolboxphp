@@ -40,9 +40,11 @@ class CYearTest extends PHPUnit_Framework_TestCase {
      */
     public function testIsLeapYear() {
         $result1900 = $this->object->isLeapYear(1900);
-        $this->assertTrue($result1900 == true);
+        $this->assertTrue($result1900 == false);
         $result1901 = $this->object->isLeapYear(1901);
-        $this->assertTrue($result1901 == true);
+        $this->assertTrue($result1901 == false);
+        $result1902 = $this->object->isLeapYear(1902);
+        $this->assertTrue($result1902 == false);
     }
 
     /**
@@ -54,7 +56,16 @@ class CYearTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue($numDays1 == 15);
         $numDays2 = $this->object->daysToDate(2, 1, 1900);
         $this->assertTrue($numDays2 == 32);
-    }
+        $numDays3 = $this->object->daysToDate(3, 15, 1901);
+        $this->assertTrue($numDays3 == 74);    
+        $numDays4 = $this->object->daysToDate(12, 31, 1980);
+        $this->assertTrue($numDays4 == 366);         
+        $numDays5 = $this->object->daysToDate(12, 31, 1981);
+        $this->assertTrue($numDays5 == 365);
+        $numDays6 = $this->object->daysToDate(4, 1, 1900);
+        $this->assertTrue($numDays6 == 91);   
+        echo "numDays6".$numDays6;
+        }
 
     /**
      * @covers CYear::days1900ToDate
@@ -63,7 +74,9 @@ class CYearTest extends PHPUnit_Framework_TestCase {
         $numDays1 = $this->object->days1900ToDate(1, 10, 1900);
         $this->assertTrue($numDays1 == 10);
         $numDays2 = $this->object->days1900ToDate(1, 11, 1901);
-        $this->assertTrue($numDays2 == 377);
+        $this->assertTrue($numDays2 == 376);
+        $numDays3 = $this->object->days1900ToDate(1, 18, 1902);
+        $this->assertTrue($numDays3 == 748);
     }
 
 }

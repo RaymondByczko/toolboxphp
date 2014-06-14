@@ -61,20 +61,33 @@ class CYear {
     static public function isLeapYear($y)
     {
         $leapYear = null;
-        if ($y%4 == 1)
+        if ($y%4 == 0)
         {
-            if ($y%400 == 0)
+            $isCentury = ($y%100 == 0);
+            if ($isCentury)
             {
-                $leapYear = false;
+                echo 'century: '.$y."\n";
+            }
+            if (($isCentury))
+            {
+                if ($y%400 == 0)
+                {
+                    $leapYear = true;
+                }
+                else 
+                {
+                    $leapYear = false;
+                }
             }
             else
             {
                 $leapYear = true;
+                echo $y.' is a leap year'."\n";
             }
         }
         else
         {
-            $leapYear = true;
+            $leapYear = false;
         }
         return $leapYear;
     }
@@ -114,6 +127,14 @@ class CYear {
          $sumDays += $d;
          return $sumDays;
      }
+     /**
+      * Calculates number of days since Jan 1, 1900 to
+      * $m,$d,$y.
+      * @param int $m month 1-12
+      * @param int $d day, per specific month
+      * @param int $y year
+      * @return int
+      */
      public function days1900ToDate($m, $d, $y)
      {
          $sumDays = 0;
