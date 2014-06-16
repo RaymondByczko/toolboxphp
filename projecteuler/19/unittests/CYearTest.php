@@ -80,12 +80,25 @@ class CYearTest extends PHPUnit_Framework_TestCase {
     }
   
     /**
-     * @covers CYear::numberSundays
+     * @covers CYear::numberSundays -- See http://www.timeanddate.com/calendar/?year=1924&country=1
+     * @link http://www.timeanddate.com/calendar/?year=1924&country=1 See this page for Calenders.
      */
     public function testNumberSundays()
     {
         $numSundays1 = $this->object->numberSundays(1, 1901, 12, 2000);
-        $this->assertTrue($numSund1 == 173);
+        $this->assertTrue($numSundays1 == 171);
+        $numSundays2 = $this->object->numberSundays(1, 1905, 12, 1906);
+        $this->assertTrue($numSundays2 == 4);
+        $numSundays3 = $this->object->numberSundays(7, 1906, 9, 1906);
+        $this->assertTrue($numSundays3 == 1);
+        $numSundays4 = $this->object->numberSundays(10, 1911, 10, 1911);
+        $this->assertTrue($numSundays4 == 1);
+        $numSundays5 = $this->object->numberSundays(11, 1911, 11, 1911);
+        $this->assertTrue($numSundays5 == 0);
+        $numSundays6 = $this->object->numberSundays(1, 1919, 12, 1919);
+        $this->assertTrue($numSundays6 == 1);
+        $numSundays7 = $this->object->numberSundays(4, 1923, 7, 1924);
+        $this->assertTrue($numSundays7 == 3);
     }
 
 }
