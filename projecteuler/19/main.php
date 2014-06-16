@@ -4,31 +4,18 @@
  * @company self
  * @author Raymond Byczko
  * @file 19/countingsundays/main.php
+ * @subject project euler 19
+ * @note Two slightly different ways of calculating answer
+ * are presented in this main.php.  The second shows
+ * generalized code in a method, derived from first.
  */
 
 require_once 'CYear.php';
 
-// EXPLANATION FOR FOLLOWING CODE FRAGMENT...
-// JUST MAKING SURE I CAN DEBUG INTO THIS WITH NETBEANS.
-// SOMETIMES IT DOESN'T COOPERATE AND NEED TO LOOK AT XDEBUG
-// AND OTHER MATTERS
-// @todo remove this
-//
-function add_this($a, $b)
-{
-    $res = $a + $b;
-    return $res;
-}
-
-$x = 4;
-$y = 5;
-
-$sumxy = add_this($x, $y);
-echo 'sumxy='.$sumxy."\n";
-
 $yearObj = new CYear();
-$numDays = $yearObj->daysToDate(4, 1, 1900);
 
+// One way to calculate answer for project euler 19.
+$numDays = $yearObj->daysToDate(4, 1, 1900);
 $numSundays = 0;
 for ($y=1901; $y<=2000; $y++)
 {
@@ -46,7 +33,9 @@ for ($y=1901; $y<=2000; $y++)
     }
 }
 
+// Second way where code is generalized further.
 $numSundays2 = $yearObj->numberSundays(1, 1901, 12, 2000);
+
 echo 'numSundays='.$numSundays."\n";
 echo 'numSundays2='.$numSundays2."\n";
 echo 'main-end'."\n";
