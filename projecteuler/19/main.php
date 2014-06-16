@@ -45,5 +45,8 @@ for ($y=1901; $y<=2000; $y++)
         }
     }
 }
+
+$numSundays2 = $yearObj->numberSundays(1, 1901, 12, 2000);
 echo 'numSundays='.$numSundays."\n";
+echo 'numSundays2='.$numSundays2."\n";
 echo 'main-end'."\n";
