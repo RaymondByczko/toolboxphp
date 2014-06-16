@@ -78,5 +78,14 @@ class CYearTest extends PHPUnit_Framework_TestCase {
         $numDays3 = $this->object->days1900ToDate(1, 18, 1902);
         $this->assertTrue($numDays3 == 748);
     }
+  
+    /**
+     * @covers CYear::numberSundays
+     */
+    public function testNumberSundays()
+    {
+        $numSundays1 = $this->object->numberSundays(1, 1901, 12, 2000);
+        $this->assertTrue($numSund1 == 173);
+    }
 
 }

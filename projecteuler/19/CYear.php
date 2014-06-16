@@ -153,6 +153,61 @@ class CYear {
          $sumDays += $lastYearsDays;
          return $sumDays;
      }
+     
+     /**
+      * Calculates the number of Sundays found between
+      * two different month dates.
+      * @param int $m1 Month of first date (1-12).
+      * @param int $y1 Year of first date.
+      * @param int $m2 Month of second date (1-12).
+      * @param int $y2 Year of second date.
+      * @throws Exception
+      */
+     public function numberSundays($m1,$y1,$m2,$y2)
+     {
+        if ($y2 < $y1)
+        {
+            throw new Exception('Years out of order; y1='.$y1."; y2=".$y2);        
+        }
+        
+        $numSundays = 0;
+        for ($y=$y1; $y<=$y2; $y++)
+        {
+            if ($y1==$y2)
+            {
+                $m_min = $m1;
+                $m_max = $m2;   
+            }
+            if (($y2 > $y1) && ($y==$y1))
+            {
+                $m_min = $m1;
+                $m_max = 12;
+            }
+            if (($y2 > $y1) && ($y > $y1) && ($y < $y2))
+            {
+                $m_min = 1;
+                $m_max = 12;
+            }
+            if (($y2 > $y1) && ($y == $y2))
+            {
+                $m_min = 1;
+                $m_max = $m2;
+            }        
+            for ($m=$m_min; $m<=$m_max; $m++)
+            {
+                $numDays = $this->days1900ToDate($m, 1, $y);
+                if ($numDays%7 == 0)
+                {
+                    // Falls on Sunday
+                    echo 'year='.$y.'; month='.$m."\n";
+                    echo 'numDays='.$numDays."\n";
+                    $numSundays++;
+            
+                }
+            }
+        }
+        return $numSundays;
+     }
     
 }
 ?>
