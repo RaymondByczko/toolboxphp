@@ -27,5 +27,19 @@ $objGrid->loadGrid($gdata);
 $grid = $objGrid->getGrid();
 $objGrid->eliminateHalf();
 $collections = $objGrid->getCollections();
+$l_max_pos=null;
+$l_max_value=null;
+$ret_largest = $objGrid->largest(0,$l_max_pos, $l_max_value);
+
+$objGrid2 = new CGrid(6,2,4);
+$gdata2 = array(
+            0 => array(1, 1, 1, 2, 2, 5),
+            1 => array(1, 9, 9, 1, 1, 1)
+        );
+$objGrid2->loadGrid($gdata2);
+$objGrid2->eliminateHalf();
+$l_max_pos=null;
+$l_max_value=null;
+$objGrid2->largest(1, $l_max_pos, $l_max_value);
 echo 'projecteuler/11/main.php: end'."\n";
 ?>

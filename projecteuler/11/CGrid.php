@@ -73,6 +73,11 @@ class CGrid {
                 {
                     $this->m_collections[$y][$x] = $this->NOT_A_CANDIDATE;
                 }
+                if ($first == $second)
+                {
+                    // Keep them both as possible candidate if already
+                    // set as such.  Otherwise, also do nothing.
+                }
                 
             }
         }
@@ -93,14 +98,14 @@ class CGrid {
         // the current max.
         $max_pos=null;
         $max_value=null;
-        for ($x=0; $x<($this->m_x_max-$this->m_collection_size); $x++)
+        for ($x=0; $x<=($this->m_x_max-$this->m_collection_size); $x++)
         {
             $candidate_pos = $this->m_collections[$row][$x];
             if ($candidate_pos == $this->NOT_A_CANDIDATE())
             {
                 continue;
             }
-            $current_value = $gdata[$row][$x] * $gdata[$row][$x+1] * $gdata[$row][$x+2] * $gdata[$row][$x+3];
+            $current_value = $this->m_gdata[$row][$x] * $this->m_gdata[$row][$x+1] * $this->m_gdata[$row][$x+2] * $this->m_gdata[$row][$x+3];
             if ($max_value == null)
             {
                 $max_pos = $x;
@@ -108,8 +113,11 @@ class CGrid {
             }
             else
             {
-                $max_pos = $x;
-                $max_value = ($current_value>$max_value)?$current_value:$max_value;
+                if ($current_value>$max_value)
+                {
+                    $max_pos = $x;
+                    $max_value = $current_value;
+                }
             }
         }
         $r_max_pos = $max_pos;
