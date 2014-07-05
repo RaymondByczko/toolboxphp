@@ -69,6 +69,11 @@ class CGridTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($collections[0][0],$this->object->NOT_A_CANDIDATE());
         $this->assertEquals($collections[0][1],$this->object->NOT_A_CANDIDATE());
         $this->assertEquals($collections[0][2],$this->object->POSSIBLE_CANDIDATE());
+
+        $this->assertEquals($collections[1][0],$this->object->POSSIBLE_CANDIDATE());
+        $this->assertEquals($collections[1][1],$this->object->POSSIBLE_CANDIDATE());
+        $this->assertEquals($collections[1][2],$this->object->POSSIBLE_CANDIDATE());
+        
     }
 
 }

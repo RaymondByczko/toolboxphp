@@ -57,8 +57,10 @@ class CGrid {
     
     public function eliminateHalf()
     {
+        // proceed along each row
         for ($y=0; $y<$this->m_y_max; $y++)
         {
+            // process columns in 1 row
             for ($x=0; $x<($this->m_x_max-$this->m_collection_size); $x++)
             {
                 $first = $this->m_gdata[$y][$x];
@@ -75,7 +77,76 @@ class CGrid {
             }
         }
     }
-    
+    /**
+     * Given a row position, largest computes the largest product
+     * value in that row, and returns the starting position of that
+     * collection (used to compute the product) along with its value.
+     * @param int $row
+     * @param int $r_max_pos
+     * @param int $r_max_value
+     * @return int
+     * @todo check on type of float or real, for r_max_value.
+     */
+    public function largest($row, &$r_max_pos, &$r_max_value)
+    {
+        // The x position for the start of the collection containing
+        // the current max.
+        $max_pos=null;
+        $max_value=null;
+        for ($x=0; $x<($this->m_x_max-$this->m_collection_size); $x++)
+        {
+            $candidate_pos = $this->m_collections[$row][$x];
+            if ($candidate_pos == $this->NOT_A_CANDIDATE())
+            {
+                continue;
+            }
+            $current_value = $gdata[$row][$x] * $gdata[$row][$x+1] * $gdata[$row][$x+2] * $gdata[$row][$x+3];
+            if ($max_value == null)
+            {
+                $max_pos = $x;
+                $max_value = $current_value;
+            }
+            else
+            {
+                $max_pos = $x;
+                $max_value = ($current_value>$max_value)?$current_value:$max_value;
+            }
+        }
+        $r_max_pos = $max_pos;
+        $r_max_value = $max_value;
+        return 0; // Success
+    }
+    /**
+     * Computes the largest value considering only the complete
+     * set of horizontal rows.
+     */
+    public function largestHorizontal()
+    {
+        $y_max=null;
+        $x_max=null;
+        $largest=null;
+        for ($y=0; $y<$this->m_y_max; $y++)
+        {
+            $max_value = null;
+            $max_pos = null;
+            $ret_l = largest($y, $max_pos, $max_value);
+            if ($y == 0)
+            {
+                $y_max = 0;
+                $x_max = $max_pos;
+                $largest = $max_value;
+            }
+            else
+            {
+                if ($max_value > $largest)
+                {
+                    $largest = $max_value;
+                    $y_max = $y;
+                    $x_max = $max_pos;
+                }
+            }
+        }
+    }
     public function getCollections()
     {
         return $this->m_collections;
