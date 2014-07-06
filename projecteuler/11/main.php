@@ -17,6 +17,7 @@
  */
 
 require_once './CGrid.php';
+require_once './CDiagonalDirection.php';
 echo 'projecteuler/11/main.php: start'."\n";
 $objGrid = new CGrid(6,2,4);
 $gdata = array(
@@ -29,7 +30,7 @@ $objGrid->eliminateHalf();
 $collections = $objGrid->getCollections();
 $l_max_pos=null;
 $l_max_value=null;
-$ret_largest = $objGrid->largest(0,$l_max_pos, $l_max_value);
+$ret_largest = $objGrid->largest(CDiagonalDirection::H(),0,$l_max_pos, $l_max_value);
 
 $objGrid2 = new CGrid(6,2,4);
 $gdata2 = array(
@@ -40,6 +41,25 @@ $objGrid2->loadGrid($gdata2);
 $objGrid2->eliminateHalf();
 $l_max_pos=null;
 $l_max_value=null;
-$objGrid2->largest(1, $l_max_pos, $l_max_value);
+$objGrid2->largest(new CDiagonalDirection(),1, $l_max_pos, $l_max_value);
+
+$object8_8 = new CGrid(8,8,4);
+$gdata8_8 = array(
+    0 => array(1, 5, 1, 1, 1, 1, 1, 1 ),
+    1 => array(1, 1, 5, 1, 1, 1, 1, 1 ),
+    2 => array(1, 1, 9, 5, 1, 1, 1, 1 ),
+    3 => array(1, 1, 1, 9, 5, 1, 1, 1 ),
+    4 => array(2, 1, 1, 3, 9, 1, 1, 1 ),
+    5 => array(1, 2, 1, 1, 3, 9, 1, 1 ),
+    6 => array(1, 1, 2, 1, 1, 3, 1, 1 ),
+    7 => array(1, 1, 1, 2, 1, 1, 3, 1 )               
+);
+$object8_8->loadGrid($gdata8_8);
+$object8_8->eliminateHalfDiagonal();   
+$y_max = null;
+$x_max = null;
+$max_value = null;
+$object8_8->largestOneDiagonal(0, 0, $y_max, $x_max, $max_value);
+
 echo 'projecteuler/11/main.php: end'."\n";
 ?>
