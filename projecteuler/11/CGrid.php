@@ -140,27 +140,55 @@ class CGrid {
         {
             $limit = $this->m_y_max-$this->m_collection_size;
         }
-        for ($x=0; $x<=$limit; $x++)
+        if ($dd->isHorizontal())
         {
-            $candidate_pos = $this->m_collections[$row][$x];
-            if ($candidate_pos == $this->NOT_A_CANDIDATE())
+            for ($x=0; $x<=$limit; $x++)
             {
-                continue;
-            }
-            $current_value = $this->m_gdata[$row][$x] * $this->m_gdata[$row][$x+1] * $this->m_gdata[$row][$x+2] * $this->m_gdata[$row][$x+3];
-            if ($max_value == null)
-            {
-                $max_pos = $x;
-                $max_value = $current_value;
-            }
-            else
-            {
-                if ($current_value>$max_value)
+                $candidate_pos = $this->m_collections[$row][$x];
+                if ($candidate_pos == $this->NOT_A_CANDIDATE())
+                {
+                    continue;
+                }
+                $current_value = $this->m_gdata[$row][$x] * $this->m_gdata[$row][$x+1] * $this->m_gdata[$row][$x+2] * $this->m_gdata[$row][$x+3];
+                if ($max_value == null)
                 {
                     $max_pos = $x;
                     $max_value = $current_value;
                 }
+                else
+                {
+                    if ($current_value>$max_value)
+                    {
+                        $max_pos = $x;
+                        $max_value = $current_value;
+                    }
+                }
             }
+        }
+        if ($dd->isVERTICAL())
+        {
+            for ($y=0; $y<=$limit; $y++)
+            {
+                $candidate_pos = $this->m_collections[$y][$row];
+                if ($candidate_pos == $this->NOT_A_CANDIDATE())
+                {
+                    continue;
+                }
+                $current_value = $this->m_gdata[$y][$row] * $this->m_gdata[$y+1][$row] * $this->m_gdata[$y+2][$row] * $this->m_gdata[$y+3][$row];
+                if ($max_value == null)
+                {
+                    $max_pos = $y;
+                    $max_value = $current_value;
+                }
+                else
+                {
+                    if ($current_value>$max_value)
+                    {
+                        $max_pos = $y;
+                        $max_value = $current_value;
+                    }
+                }
+            }           
         }
         $r_max_pos = $max_pos;
         $r_max_value = $max_value;

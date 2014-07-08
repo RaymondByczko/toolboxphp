@@ -124,6 +124,47 @@ class CGridTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(64*64, $l_max_value);
     }
     
+    public function testLargest3()
+    {
+        $gdata = array(
+            0=>array(1, 1, 9),
+            1=>array(1, 1, 9),
+            2=>array(1, 1, 9),
+            3=>array(2, 1, 9),
+            4=>array(2, 1, 1),
+            5=>array(2, 1, 1),
+            6=>array(2, 4, 1),
+            7=>array(5, 4, 1),
+            8=>array(5, 4, 1),         
+            9=>array(5, 4, 1),
+            10=>array(5, 1, 1),
+            11=>array(1, 1, 1),
+            12=>array(1, 1, 1),
+            13=>array(1, 1, 1),
+            14=>array(1, 1, 1),
+            15=>array(1, 1, 1)
+        );
+        $objCGrid16_3 = new CGrid(3,16,4);
+        $objCGrid16_3->loadGrid($gdata);
+        $objCGrid16_3->eliminateHalf();
+        $x_max_pos=null;
+        $x_max_value=null;
+        $objCGrid16_3->largest(CDiagonalDirection::V(), 0, $x_max_pos, $x_max_value);
+        $this->assertEquals(7, $x_max_pos);
+        $this->assertEquals(25*25,$x_max_value);
+        $x_max_pos=null;
+        $x_max_value=null;
+        $objCGrid16_3->largest(CDiagonalDirection::V(), 1, $x_max_pos, $x_max_value);
+        $this->assertEquals(6, $x_max_pos);
+        $this->assertEquals(16*16,$x_max_value); 
+        $x_max_pos=null;
+        $x_max_value=null;
+        $objCGrid16_3->largest(CDiagonalDirection::V(), 2, $x_max_pos, $x_max_value); 
+        $this->assertEquals(0, $x_max_pos);
+        $this->assertEquals(81*81,$x_max_value);     
+    
+    }
+    
     public function testLargestHorizontal()
     {
         $gdata = array(
