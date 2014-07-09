@@ -55,7 +55,7 @@ $gdata8_8 = array(
     7 => array(1, 1, 1, 2, 1, 1, 3, 1 )               
 );
 $object8_8->loadGrid($gdata8_8);
-$object8_8->eliminateHalfDiagonal();   
+$object8_8->eliminateDiagonals2_4();   
 $y_max = null;
 $x_max = null;
 $max_value = null;

@@ -14,11 +14,36 @@
  * by using $x_max and $y_max.  The number of values used in the
  * product is given by collection_size.
  *
+ * @note Each set of numbers used to form a product is known in this
+ * class as a collection.  To specify one exact collection, two pieces
+ * of information are needed:
+ * 
+ * a) an 'origin' of the collection
+ * b) the direction of the collection
+ * c) the size of the collection
+ * 
+ * Sounds like a vector to me!
+ * origin and direction are related.  A collection can be specified by
+ * one end, a origin and its direction.  Likewise, the same collection
+ * can be specifed with the other end, and the opposite direction.
+ * 
+ * origin is just a pair in our grid (say $x, y).
+ * direction specifies something related to origin.  e.g. $x+1,$y+1.
+ * This indicates a diagonal advancing in increasing x and y.
+ * Another example would be $x+1,$y, which is a horizontal row (constant
+ * y)
  * @author raymond
  */
 class CGrid {
     private $m_x_max=null;
     private $m_y_max=null;
+    /**
+     *
+     * @var integer The size of each collection.  Each collection is comprised
+     * of a number of numbers which are multiplied to form a product.
+     * e.g 3*3*2*2 .  Here the collection size is 4 and the product is 36.
+     * e.g.1*7*2*2*3.  Here the collection size is 5 and the product is 84.
+     */
     private $m_collection_size=null;
     private $m_gdata=null;
     private $POSSIBLE_CANDIDATE=0;
@@ -63,19 +88,26 @@ class CGrid {
         return $this->m_gdata;
     }
     
+    /**
+     * Considers all rows 'horizontally' positioned.
+     * (row is determined by $y in code)
+     */
     public function eliminateHalf()
     {
-        // proceed along each row
+        // proceed along each row - I visualize this as proceeding
+        // vertically.
         for ($y=0; $y<$this->m_y_max; $y++)
         {
-            // process columns in 1 row
-            for ($x=0; $x<($this->m_x_max-$this->m_collection_size); $x++)
+            // process columns in 1 row - I visualize this as proceeding
+            // horizontally.
+            $numCollections = $this->m_x_max-$this->m_collection_size;
+            for ($x=0; $x<$numCollections; $x++)
             {
                 $first = $this->m_gdata[$y][$x];
-                $second = $this->m_gdata[$y][$x+4];
+                $second = $this->m_gdata[$y][$x+$this->m_collection_size];
                 if ($first > $second)
                 {
-                    $this->m_collections[$y][$x+4] = $this->NOT_A_CANDIDATE;
+                    $this->m_collections[$y][$x+$this->m_collection_size] = $this->NOT_A_CANDIDATE;
                 }
                 if ($first < $second)
                 {
@@ -90,13 +122,21 @@ class CGrid {
             }
         }
     }
-    public function eliminateHalfDiagonal()
+    /**
+     * Eliminates up to half of all candidates along a set of diagonals
+     * running 'southeast'.  Essentially an element at $y,$x is compared
+     * to an element at $y+$m_collection_size, $x+$m_collection_size.
+     * This allows comparison of collections at $y,$x and $y+1,$x+1.
+     * @note The '2_4' designation indicates a diagonal in quadrant 2 to
+     * quadrant 4 in the 2-D cartesian plane.
+     */
+    public function eliminateDiagonals2_4()
     {
-        for ($y=0; $y<$this->m_y_max-$this->m_collection_size; $y++)
+        $cs = $this->m_collection_size;
+        for ($y=0; $y<$this->m_y_max-$cs; $y++)
         {
-            for ($x=0; $x<($this->m_x_max-$this->m_collection_size); $x++)
+            for ($x=0; $x<($this->m_x_max-$cs); $x++)
             {
-                $cs = $this->m_collection_size;
                 $first = $this->m_gdata[$y][$x];
                 $second = $this->m_gdata[$y+$cs][$x+$cs];    
                 if ($first > $second)
@@ -115,15 +155,50 @@ class CGrid {
             }
         }
     }
+   /**
+     * Eliminates up to half of all candidates along a set of diagonals
+     * running 'northeast'.  Essentially an element at $y,$x is compared
+     * to an element at $y-$m_collection_size, $x-$m_collection_size.
+     * This allows comparison of collections at $y,$x and $y-1,$x-1.
+     * @note The '3_1' designation indicates a diagonal in quadrant 3 to
+     * quadrant 1 in the 2-D cartesian plane.
+     */    
+    public function eliminateDiagonals3_1()
+    {
+        $cs = $this->m_collection_size;
+        for ($y=$this->m_y_max-1; $y>=$cs; $y--)
+        {
+            for ($x=$this->m_x_max-1; $x>=$cs; $x--)
+            {      
+                $first = $this->m_gdata[$y][$x];
+                $second = $this->m_gdata[$y-$cs][$x-$cs];
+                if ($first > $second)
+                {
+                    $this->m_dcollections[$y-1][$x-1] = $this->NOT_A_CANDIDATE;
+                }
+                if ($first < $second)
+                {
+                    $this->m_dcollections[$y][$x] = $this->NOT_A_CANDIDATE;
+                }
+                if ($first == $second)
+                {
+                    // Keep them both as possible candidate if already
+                    // set as such.  Otherwise, also do nothing.
+                }
+            }
+        }
+    }
     /**
      * Given a row position, largest computes the largest product
      * value in that row, and returns the starting position of that
      * collection (used to compute the product) along with its value.
+     * @param CDiagonalDirection specifies horizontal, vertical.
      * @param int $row
      * @param int $r_max_pos
      * @param int $r_max_value
      * @return int
      * @todo check on type of float or real, for r_max_value.
+     * @note Call the appropriate eliminate* method before calling this method.
      */
     public function largest(CDiagonalDirection $dd, $row, &$r_max_pos, &$r_max_value)
     {
@@ -291,6 +366,42 @@ class CGrid {
         $x = $x_max;
         $value = $largest;
         return 1; // success
+    }
+    
+    /**
+     * Computes the largest value considering only the complete
+     * set of vertical rows.
+     */
+    public function largestVertical(&$y, &$x, &$value)
+    {
+        $y_max=null;
+        $x_max=null;
+        $largest=null;
+        for ($x=0; $x<$this->m_x_max; $x++)
+        {
+            $max_value = null;
+            $max_pos = null;
+            $ret_l = $this->largest(CDiagonalDirection::V(), $x, $max_pos, $max_value);
+            if ($x == 0)
+            {
+                $y_max = $max_pos;
+                $x_max = 0;
+                $largest = $max_value;
+            }
+            else
+            {
+                if ($max_value > $largest)
+                {
+                    $largest = $max_value;
+                    $y_max = $max_pos;
+                    $x_max = $x;
+                }
+            }
+        }
+        $y = $y_max;
+        $x = $x_max;
+        $value = $largest;
+        return 1; // success        
     }
     
     public function getCollections()

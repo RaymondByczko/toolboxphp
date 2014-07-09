@@ -209,7 +209,7 @@ class CGridTest extends PHPUnit_Framework_TestCase {
     
     public function testLargestOneDiagonal()
     {
-            $gdata8_8 = array(
+        $gdata8_8 = array(
             0 => array(1, 5, 1, 1, 1, 1, 1, 1 ),
             1 => array(1, 1, 5, 1, 1, 1, 1, 1 ),
             2 => array(1, 1, 9, 5, 1, 1, 1, 1 ),
@@ -220,7 +220,7 @@ class CGridTest extends PHPUnit_Framework_TestCase {
             7 => array(1, 1, 1, 2, 1, 1, 3, 1 )               
         );
         $this->object8_8->loadGrid($gdata8_8);
-        $this->object8_8->eliminateHalfDiagonal();   
+        $this->object8_8->eliminateDiagonals2_4();   
         $y_max = null;
         $x_max = null;
         $max_value = null;
@@ -244,6 +244,28 @@ class CGridTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(null, $max_value);
         $this->assertEquals(null, $y_max);
         $this->assertEquals(null, $x_max);
+    }
+    
+    public function testEliminateDiagonals3_1()
+    {
+        $gdata8_8 = array(
+            0 => array(1, 1, 1, 1, 1, 1, 1, 1 ),
+            1 => array(1, 1, 1, 1, 1, 1, 1, 1 ),
+            2 => array(1, 1, 1, 1, 1, 1, 1, 1 ),
+            3 => array(1, 1, 1, 1, 1, 1, 1, 4 ),
+            4 => array(1, 1, 1, 2, 1, 1, 4, 1 ),
+            5 => array(1, 1, 2, 1, 1, 4, 1, 1 ),
+            6 => array(1, 2, 1, 1, 4, 1, 1, 1 ),
+            7 => array(2, 1, 1, 1, 1, 1, 1, 1 )               
+        );
+        $this->object8_8->loadGrid($gdata8_8);
+        $this->object8_8->eliminateDiagonals3_1(); 
+        
+        $collections = $this->object->getCollections();
+        $this->assertEquals($collections[7][0], $this->object->POSSIBLE_CANDIDATE());
+        $this->assertEquals($collections[6][1], $this->object->NOT_A_CANDIDATE());
+        $this->assertEquals($collections[6][2], $this->object->NOT_A_CANDIDATE_CANDIDATE());
+        $this->assertEquals($collections[5][3], $this->object->NOT_A_CANDIDATE_CANDIDATE());
     }
 
 }
