@@ -33,8 +33,10 @@
  * Another example would be $x+1,$y, which is a horizontal row (constant
  * y)
  * @author raymond
- * @change_history 2014-07-07 July 07; RByczko; Adjusted behavior
+ * @change_history 2014-07-10 July 10; RByczko; Adjusted behavior
  * when first and second are equal, making first NOT A CANDIDATE.
+ * @change_history 2014-07-10 July 10; RByczko; Adjusted name of m_collections
+ * to m_hcollections to better reflect its horizontal context. 
  */
 class CGrid {
     private $m_x_max=null;
@@ -55,7 +57,7 @@ class CGrid {
      * @var array Contains the horizontal collections.  Each collection
      * is of m_collection_size.
      */
-    private $m_collections=null;
+    private $m_hcollections=null;
     private $m_dcollections=null;
     private $m_3_1_dcollections=null;
     public function __construct($x_max, $y_max, $collection_size)
@@ -64,7 +66,7 @@ class CGrid {
         $this->m_y_max = $y_max;
         $this->m_collection_size = $collection_size;
         // Horizontal
-        $this->m_collections = array_fill(0, $this->m_y_max, array_fill(0, $this->m_x_max,$this->POSSIBLE_CANDIDATE));
+        $this->m_hcollections = array_fill(0, $this->m_y_max, array_fill(0, $this->m_x_max,$this->POSSIBLE_CANDIDATE));
         // Diagonal
         if ( ($this->m_y_max > $this->m_collection_size) &&
     ($this->m_x_max > $this->m_collection_size) )
@@ -112,11 +114,11 @@ class CGrid {
                 $second = $this->m_gdata[$y][$x+$this->m_collection_size];
                 if ($first > $second)
                 {
-                    $this->m_collections[$y][$x+$this->m_collection_size] = $this->NOT_A_CANDIDATE;
+                    $this->m_hcollections[$y][$x+$this->m_collection_size] = $this->NOT_A_CANDIDATE;
                 }
                 if ($first < $second)
                 {
-                    $this->m_collections[$y][$x] = $this->NOT_A_CANDIDATE;
+                    $this->m_hcollections[$y][$x] = $this->NOT_A_CANDIDATE;
                 }
                 if ($first == $second)
                 {
@@ -124,7 +126,7 @@ class CGrid {
                     // set as such.  Otherwise, also do nothing.
                     // or...
                     // Declare the first one as NOT A CANDIDATE.
-                    $this->m_collections[$y][$x] = $this->NOT_A_CANDIDATE;
+                    $this->m_hcollections[$y][$x] = $this->NOT_A_CANDIDATE;
                 }
                 
             }
@@ -239,7 +241,7 @@ class CGrid {
         {
             for ($x=0; $x<=$limit; $x++)
             {
-                $candidate_pos = $this->m_collections[$row][$x];
+                $candidate_pos = $this->m_hcollections[$row][$x];
                 if ($candidate_pos == $this->NOT_A_CANDIDATE())
                 {
                     continue;
@@ -264,7 +266,7 @@ class CGrid {
         {
             for ($y=0; $y<=$limit; $y++)
             {
-                $candidate_pos = $this->m_collections[$y][$row];
+                $candidate_pos = $this->m_hcollections[$y][$row];
                 if ($candidate_pos == $this->NOT_A_CANDIDATE())
                 {
                     continue;
@@ -426,7 +428,7 @@ class CGrid {
     
     public function getCollections()
     {
-        return $this->m_collections;
+        return $this->m_hcollections;
     }
     public function getD3_1Collections()
     {
