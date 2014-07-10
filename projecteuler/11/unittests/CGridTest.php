@@ -8,7 +8,9 @@
  * @start_date 2014-07-02 July 2
  * @change_history 2014-07-10 July 10; RByczko; Adjusted a test  case
  * to account for equality in first,second comparison (see CGrid.php).
- * The first will be declared as NOT_A_CANDIDATE. 
+ * The first will be declared as NOT_A_CANDIDATE.
+ * @change_history 2014-07-10 July 10; RByczko; Adjusted name of
+ * getCollections to getHCollections. 
  */
 require_once '../CGrid.php';
 require_once '../CDiagonalDirection.php';
@@ -75,7 +77,7 @@ class CGridTest extends PHPUnit_Framework_TestCase {
         );
         $this->object->loadGrid($gdata);
         $this->object->eliminateHalf();
-        $collections = $this->object->getCollections();
+        $collections = $this->object->getHCollections();
         $this->assertEquals($collections[0][0], $this->object->NOT_A_CANDIDATE());
         $this->assertEquals($collections[0][1], $this->object->NOT_A_CANDIDATE());
         $this->assertEquals($collections[0][2], $this->object->POSSIBLE_CANDIDATE());

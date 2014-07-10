@@ -36,7 +36,10 @@
  * @change_history 2014-07-10 July 10; RByczko; Adjusted behavior
  * when first and second are equal, making first NOT A CANDIDATE.
  * @change_history 2014-07-10 July 10; RByczko; Adjusted name of m_collections
- * to m_hcollections to better reflect its horizontal context. 
+ * to m_hcollections to better reflect its horizontal context.
+ * @change_history 2014-07-10 July 10; RByczko; Changed name of getCollections
+ * to getHCollections.  Introduced getVCollections and supporting vars. Minor
+ * fix - should refer to m_vcollections when context is vertical. 
  */
 class CGrid {
     private $m_x_max=null;
@@ -58,6 +61,7 @@ class CGrid {
      * is of m_collection_size.
      */
     private $m_hcollections=null;
+    private $m_vcollections=null;
     private $m_dcollections=null;
     private $m_3_1_dcollections=null;
     public function __construct($x_max, $y_max, $collection_size)
@@ -67,6 +71,8 @@ class CGrid {
         $this->m_collection_size = $collection_size;
         // Horizontal
         $this->m_hcollections = array_fill(0, $this->m_y_max, array_fill(0, $this->m_x_max,$this->POSSIBLE_CANDIDATE));
+        // Vertical
+        $this->m_vcollections = array_fill(0, $this->m_y_max, array_fill(0, $this->m_x_max,$this->POSSIBLE_CANDIDATE));
         // Diagonal
         if ( ($this->m_y_max > $this->m_collection_size) &&
     ($this->m_x_max > $this->m_collection_size) )
@@ -266,7 +272,7 @@ class CGrid {
         {
             for ($y=0; $y<=$limit; $y++)
             {
-                $candidate_pos = $this->m_hcollections[$y][$row];
+                $candidate_pos = $this->m_vcollections[$y][$row];
                 if ($candidate_pos == $this->NOT_A_CANDIDATE())
                 {
                     continue;
@@ -426,9 +432,13 @@ class CGrid {
         return 1; // success        
     }
     
-    public function getCollections()
+    public function getHCollections()
     {
         return $this->m_hcollections;
+    }
+    public function getVCollections()
+    {
+        return $this->m_vcollections;
     }
     public function getD3_1Collections()
     {

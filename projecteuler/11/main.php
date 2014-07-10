@@ -13,7 +13,8 @@
  * @filesource
  * @purpose
  * @start_date
- * @change_history
+ * @change_history 2014-07-10 July 10; RByczko; Changed name of getCollections
+ * to getHCollections.
  */
 
 require_once './CGrid.php';
@@ -27,7 +28,7 @@ $gdata = array(
 $objGrid->loadGrid($gdata);
 $grid = $objGrid->getGrid();
 $objGrid->eliminateHalf();
-$collections = $objGrid->getCollections();
+$collections = $objGrid->getHCollections();
 $l_max_pos=null;
 $l_max_value=null;
 $ret_largest = $objGrid->largest(CDiagonalDirection::H(),0,$l_max_pos, $l_max_value);
