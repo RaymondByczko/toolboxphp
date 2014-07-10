@@ -261,11 +261,11 @@ class CGridTest extends PHPUnit_Framework_TestCase {
         $this->object8_8->loadGrid($gdata8_8);
         $this->object8_8->eliminateDiagonals3_1(); 
         
-        $collections = $this->object->getCollections();
+        $collections = $this->object8_8->getD3_1Collections();
         $this->assertEquals($collections[7][0], $this->object->POSSIBLE_CANDIDATE());
         $this->assertEquals($collections[6][1], $this->object->NOT_A_CANDIDATE());
-        $this->assertEquals($collections[6][2], $this->object->NOT_A_CANDIDATE_CANDIDATE());
-        $this->assertEquals($collections[5][3], $this->object->NOT_A_CANDIDATE_CANDIDATE());
+        $this->assertEquals($collections[5][2], $this->object->NOT_A_CANDIDATE());
+        $this->assertEquals($collections[4][3], $this->object->NOT_A_CANDIDATE());
     }
 
 }

@@ -55,6 +55,7 @@ class CGrid {
      */
     private $m_collections=null;
     private $m_dcollections=null;
+    private $m_3_1_dcollections=null;
     public function __construct($x_max, $y_max, $collection_size)
     {
         $this->m_x_max = $x_max;
@@ -67,6 +68,8 @@ class CGrid {
     ($this->m_x_max > $this->m_collection_size) )
         {
             $this->m_dcollections = array_fill(0, $this->m_y_max-$this->m_collection_size, array_fill(0, $this->m_x_max-$this->m_collection_size,$this->POSSIBLE_CANDIDATE));
+            $this->m_3_1_dcollections = array_fill($this->m_collection_size-1, $this->m_y_max-$this->m_collection_size+1, array_fill(0, $this->m_x_max-$this->m_collection_size+1,$this->POSSIBLE_CANDIDATE));
+            
         }
     }
     /**
@@ -166,19 +169,23 @@ class CGrid {
     public function eliminateDiagonals3_1()
     {
         $cs = $this->m_collection_size;
+        // start from bottom row..
         for ($y=$this->m_y_max-1; $y>=$cs; $y--)
         {
-            for ($x=$this->m_x_max-1; $x>=$cs; $x--)
+            // .. proceed across... then got up a row...
+            for ($x=0; $x<=$this->m_x_max-$cs-1; $x++)
             {      
                 $first = $this->m_gdata[$y][$x];
-                $second = $this->m_gdata[$y-$cs][$x-$cs];
+                $sy = $y - $cs;
+                $sx = $x + $cs;
+                $second = $this->m_gdata[$sy][$sx];
                 if ($first > $second)
                 {
-                    $this->m_dcollections[$y-1][$x-1] = $this->NOT_A_CANDIDATE;
+                    $this->m_3_1_dcollections[$y-1][$x+1] = $this->NOT_A_CANDIDATE;
                 }
                 if ($first < $second)
                 {
-                    $this->m_dcollections[$y][$x] = $this->NOT_A_CANDIDATE;
+                    $this->m_3_1_dcollections[$y][$x] = $this->NOT_A_CANDIDATE;
                 }
                 if ($first == $second)
                 {
@@ -187,6 +194,7 @@ class CGrid {
                 }
             }
         }
+        return true; // success
     }
     /**
      * Given a row position, largest computes the largest product
@@ -407,6 +415,10 @@ class CGrid {
     public function getCollections()
     {
         return $this->m_collections;
+    }
+    public function getD3_1Collections()
+    {
+        return $this->m_3_1_dcollections;
     }
     public function POSSIBLE_CANDIDATE()
     {
