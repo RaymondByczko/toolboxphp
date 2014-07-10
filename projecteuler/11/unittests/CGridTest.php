@@ -6,6 +6,9 @@
  * @filesource CGridTest.php
  * @file CGridTest.php
  * @start_date 2014-07-02 July 2
+ * @change_history 2014-07-10 July 10; RByczko; Adjusted a test  case
+ * to account for equality in first,second comparison (see CGrid.php).
+ * The first will be declared as NOT_A_CANDIDATE. 
  */
 require_once '../CGrid.php';
 require_once '../CDiagonalDirection.php';
@@ -99,7 +102,7 @@ class CGridTest extends PHPUnit_Framework_TestCase {
         $l_max_pos=null;
         $l_max_value=null;
         $this->object->largest(CDiagonalDirection::H(), 1, $l_max_pos, $l_max_value);
-        $this->assertEquals(0, $l_max_pos);
+        $this->assertEquals(1, $l_max_pos);
         $this->assertEquals(81, $l_max_value);
     }
     

@@ -33,6 +33,8 @@
  * Another example would be $x+1,$y, which is a horizontal row (constant
  * y)
  * @author raymond
+ * @change_history 2014-07-07 July 07; RByczko; Adjusted behavior
+ * when first and second are equal, making first NOT A CANDIDATE.
  */
 class CGrid {
     private $m_x_max=null;
@@ -120,6 +122,9 @@ class CGrid {
                 {
                     // Keep them both as possible candidate if already
                     // set as such.  Otherwise, also do nothing.
+                    // or...
+                    // Declare the first one as NOT A CANDIDATE.
+                    $this->m_collections[$y][$x] = $this->NOT_A_CANDIDATE;
                 }
                 
             }
@@ -154,6 +159,9 @@ class CGrid {
                 {
                     // Keep them both as possible candidate if already
                     // set as such.  Otherwise, also do nothing.
+                    // or...
+                    // Declare first as NOT A CANDIDATE
+                    $this->m_dcollections[$y][$x] = $this->NOT_A_CANDIDATE;
                 }
             }
         }
@@ -191,6 +199,10 @@ class CGrid {
                 {
                     // Keep them both as possible candidate if already
                     // set as such.  Otherwise, also do nothing.
+                    // or...
+                    // pick the first as NOT A CANDIDATE
+                    $this->m_3_1_dcollections[$y][$x] = $this->NOT_A_CANDIDATE;
+                    
                 }
             }
         }
