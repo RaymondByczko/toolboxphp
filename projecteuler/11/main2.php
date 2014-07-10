@@ -16,6 +16,8 @@
  * main of the application.
  * @start_date 2014-07-07 July 7
  * @change_history RByczko; 2014-07-07 July 7; Started this file.
+ * @change_history RByczko; 2014-07-10 July 10; Renamed eliminateHalf
+ * to eliminateHorizontals.
  */
 ?>
 <?php
@@ -42,7 +44,7 @@ $gdata = array(
     );
 $objCGrid16_3 = new CGrid(3,16,4);
 $objCGrid16_3->loadGrid($gdata);
-$objCGrid16_3->eliminateHalf();
+$objCGrid16_3->eliminateHorizontals();
 $x_max_pos=null;
 $x_max_value=null;
 $objCGrid16_3->largest(CDiagonalDirection::V(), 0, $x_max_pos, $x_max_value);

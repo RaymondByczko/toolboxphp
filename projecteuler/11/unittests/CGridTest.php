@@ -10,7 +10,9 @@
  * to account for equality in first,second comparison (see CGrid.php).
  * The first will be declared as NOT_A_CANDIDATE.
  * @change_history 2014-07-10 July 10; RByczko; Adjusted name of
- * getCollections to getHCollections. 
+ * getCollections to getHCollections.
+ * @change_history 2014-07-10 July 10; RByczko; Changed name of eliminateHalf
+ * to eliminateHorizontals.
  */
 require_once '../CGrid.php';
 require_once '../CDiagonalDirection.php';
@@ -76,7 +78,7 @@ class CGridTest extends PHPUnit_Framework_TestCase {
             1 => array(4, 9, 9, 1, 3, 8)
         );
         $this->object->loadGrid($gdata);
-        $this->object->eliminateHalf();
+        $this->object->eliminateHorizontals();
         $collections = $this->object->getHCollections();
         $this->assertEquals($collections[0][0], $this->object->NOT_A_CANDIDATE());
         $this->assertEquals($collections[0][1], $this->object->NOT_A_CANDIDATE());
@@ -94,7 +96,7 @@ class CGridTest extends PHPUnit_Framework_TestCase {
             1 => array(1, 9, 9, 1, 1, 1)
         );
         $this->object->loadGrid($gdata);
-        $this->object->eliminateHalf();
+        $this->object->eliminateHorizontals();
         $l_max_pos=null;
         $l_max_value=null;
         $this->object->largest(CDiagonalDirection::H(), 0, $l_max_pos, $l_max_value);
@@ -115,7 +117,7 @@ class CGridTest extends PHPUnit_Framework_TestCase {
             1 => array(2, 3, 4, 2, 1, 1, 8, 8, 8, 8, 1, 1, 1, 1, 1)
         );
         $this->object2->loadGrid($gdata);
-        $this->object2->eliminateHalf();
+        $this->object2->eliminateHorizontals();
         $l_max_pos=null;
         $l_max_value=null;
         $this->object2->largest(CDiagonalDirection::H(), 0, $l_max_pos, $l_max_value);
@@ -151,7 +153,7 @@ class CGridTest extends PHPUnit_Framework_TestCase {
         );
         $objCGrid16_3 = new CGrid(3,16,4);
         $objCGrid16_3->loadGrid($gdata);
-        $objCGrid16_3->eliminateHalf();
+        $objCGrid16_3->eliminateHorizontals();
         $x_max_pos=null;
         $x_max_value=null;
         $objCGrid16_3->largest(CDiagonalDirection::V(), 0, $x_max_pos, $x_max_value);
@@ -180,7 +182,7 @@ class CGridTest extends PHPUnit_Framework_TestCase {
             4 => array(3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3)
         );
         $this->object5_15->loadGrid($gdata);
-        $this->object5_15->eliminateHalf();
+        $this->object5_15->eliminateHorizontals();
         
         $max_y=null;
         $max_x=null;
@@ -201,7 +203,7 @@ class CGridTest extends PHPUnit_Framework_TestCase {
             4 => array(3, 3, 9, 9, 9, 9, 3, 3, 3, 3, 3, 3, 3, 3, 3)
         );
         $this->object5_15->loadGrid($gdata);
-        $this->object5_15->eliminateHalf();
+        $this->object5_15->eliminateHorizontals();
         
         $max_y=null;
         $max_x=null;

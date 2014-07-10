@@ -15,6 +15,8 @@
  * @start_date
  * @change_history 2014-07-10 July 10; RByczko; Changed name of getCollections
  * to getHCollections.
+ * @change_history 2014-07-10 July 10; RByczko; Changed name of eliminateHalf
+ * to eliminateHorizontals.
  */
 
 require_once './CGrid.php';
@@ -27,7 +29,7 @@ $gdata = array(
 );
 $objGrid->loadGrid($gdata);
 $grid = $objGrid->getGrid();
-$objGrid->eliminateHalf();
+$objGrid->eliminateHorizontals();
 $collections = $objGrid->getHCollections();
 $l_max_pos=null;
 $l_max_value=null;
@@ -39,7 +41,7 @@ $gdata2 = array(
             1 => array(1, 9, 9, 1, 1, 1)
         );
 $objGrid2->loadGrid($gdata2);
-$objGrid2->eliminateHalf();
+$objGrid2->eliminateHorizontals();
 $l_max_pos=null;
 $l_max_value=null;
 $objGrid2->largest(new CDiagonalDirection(),1, $l_max_pos, $l_max_value);

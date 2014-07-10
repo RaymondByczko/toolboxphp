@@ -39,7 +39,9 @@
  * to m_hcollections to better reflect its horizontal context.
  * @change_history 2014-07-10 July 10; RByczko; Changed name of getCollections
  * to getHCollections.  Introduced getVCollections and supporting vars. Minor
- * fix - should refer to m_vcollections when context is vertical. 
+ * fix - should refer to m_vcollections when context is vertical.
+ * @change_history 2014-07-10 July 10; RByczko; Changed name of eliminateHalf
+ * to eliminateHorizontals.
  */
 class CGrid {
     private $m_x_max=null;
@@ -105,7 +107,7 @@ class CGrid {
      * Considers all rows 'horizontally' positioned.
      * (row is determined by $y in code)
      */
-    public function eliminateHalf()
+    public function eliminateHorizontals()
     {
         // proceed along each row - I visualize this as proceeding
         // vertically.
