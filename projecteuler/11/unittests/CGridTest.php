@@ -18,6 +18,8 @@
  * in eliminateHorizontals (and eliminateVerticals too). first is at one
  * pair of $x,$y.  second is right next to it - just increase $x,$y or both by 1.
  * (And not by m_collection_size).
+ * @change_history 2014-07-11 July 11; RByczko; Added testEliminateVerticals.
+ * @todo - test remaining columns in testEliminateVerticals.
  */
 require_once '../CGrid.php';
 require_once '../CDiagonalDirection.php';
@@ -92,6 +94,45 @@ class CGridTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($collections[1][0], $this->object->POSSIBLE_CANDIDATE());
         $this->assertEquals($collections[1][1], $this->object->NOT_A_CANDIDATE());
         $this->assertEquals($collections[1][2], $this->object->NOT_A_CANDIDATE());
+    }
+    // @todo - make up test for eliminateHorizontals where its only 4 wide.
+    // This is a boundary case.  If one dimension is less than or equal to
+    // m_collection_size, then eliminate cannot work in that dimension.
+    // This was discovered accidently in testEliminateVerticals.
+    /*
+     * 
+     */
+    public function testEliminateVerticals()
+    {
+       $gdata = array(
+            0 => array(1, 1, 1, 8, 1),
+            1 => array(1, 1, 1, 8, 1),
+            2 => array(1, 7, 1, 8, 1),
+            3 => array(3, 7, 1, 8, 1),
+            4 => array(3, 7, 1, 1, 1),
+            5 => array(3, 7, 1, 1, 1),
+            6 => array(3, 1, 9, 1, 1),
+            7 => array(1, 1, 9, 1, 1),
+            8 => array(1, 1, 9, 1, 1),
+            9 => array(1, 1, 9, 1, 1)
+        );
+        $objCGrid = new CGrid(5,10,4);
+        $objCGrid->loadGrid($gdata);
+        $objCGrid->eliminateVerticals();
+        $collections = $objCGrid->getVCollections();
+        $ak = array_keys($collections);
+        $ak_min = min($ak);
+        $this->assertEquals($ak_min, 0);
+        $ak_max = max($ak);
+        $this->assertEquals($ak_max, 6);
+        $this->assertEquals($collections[0][0], $objCGrid->NOT_A_CANDIDATE());
+        $this->assertEquals($collections[1][0], $objCGrid->NOT_A_CANDIDATE());
+        $this->assertEquals($collections[2][0], $objCGrid->NOT_A_CANDIDATE());
+        $this->assertEquals($collections[3][0], $objCGrid->POSSIBLE_CANDIDATE());
+        $this->assertEquals($collections[4][0], $objCGrid->NOT_A_CANDIDATE());
+        $this->assertEquals($collections[5][0], $objCGrid->NOT_A_CANDIDATE());
+        $this->assertEquals($collections[6][0], $objCGrid->NOT_A_CANDIDATE());
+        // @todo test other columns
     }
     
     public function testLargest()

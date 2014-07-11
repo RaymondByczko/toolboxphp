@@ -44,6 +44,10 @@
  * to eliminateHorizontals.
  * @change_history 2014-07-11 July 11; RByczko; Added eliminateVerticals.
  * Fixed eliminateHorizontals.
+ * @change_history 2014-07-11 July 11; RByczko; Enhanced *collections
+ * array extents due to the fact they are less in 1 or both dimensions
+ * depending on what version of eliminate* is called.  Also added tests
+ * in loadGrid method since mistakes can occur here easily.
  */
 class CGrid {
     private $m_x_max=null;
@@ -63,6 +67,10 @@ class CGrid {
      *
      * @var array Contains the horizontal collections.  Each collection
      * is of m_collection_size.
+     * @note The *collections arrays are for storing candidacy information.
+     * Its extent will be less in one (horizontal or vertical) or both
+     * dimensions (diagonals) than the original data grid (via gdata in
+     * loadGrid).
      */
     private $m_hcollections=null;
     private $m_vcollections=null;
@@ -74,9 +82,20 @@ class CGrid {
         $this->m_y_max = $y_max;
         $this->m_collection_size = $collection_size;
         // Horizontal
-        $this->m_hcollections = array_fill(0, $this->m_y_max, array_fill(0, $this->m_x_max,$this->POSSIBLE_CANDIDATE));
+        // @note nvc stands for 'number of valid collections'
+        $nvc_h_x = $this->m_x_max - $collection_size + 1;
+        $nvc_h_y = $this->m_y_max;
+        if (($nvc_h_x>0) && ($nvc_h_y > 0))
+        {
+            $this->m_hcollections = array_fill(0, $nvc_h_y, array_fill(0, $nvc_h_x,$this->POSSIBLE_CANDIDATE));
+        }
         // Vertical
-        $this->m_vcollections = array_fill(0, $this->m_y_max, array_fill(0, $this->m_x_max,$this->POSSIBLE_CANDIDATE));
+        $nvc_v_x = $this->m_x_max;
+        $nvc_v_y = $this->m_y_max - $collection_size + 1;
+        if (($nvc_v_x>0) && ($nvc_v_y > 0))
+        {       
+            $this->m_vcollections = array_fill(0, $nvc_v_y, array_fill(0, $nvc_v_x,$this->POSSIBLE_CANDIDATE));
+        }
         // Diagonal
         if ( ($this->m_y_max > $this->m_collection_size) &&
     ($this->m_x_max > $this->m_collection_size) )
@@ -95,7 +114,22 @@ class CGrid {
     {
         if (is_array($gdata == FALSE))
         {
-            throw Exception('gdata is not an array');
+            throw new Exception('gdata is not an array');
+        }
+        // The dimensions of gdata must line up with what is specified in CGrid
+        // constructor.
+        $y_size = count($gdata);
+        if ($y_size != $this->m_y_max)
+        {
+            throw new Exception('gdata is not correct in y; y_size='.$y_size.', m_y_max='.$this->m_y_max);
+        }
+        foreach ($gdata as $key=>$egdata)
+        {
+            $egdata_size = count($egdata);
+            if ($egdata_size != $this->m_x_max)
+            {
+                throw new Exception('gdata is not correct in x; egdata_size='.$egdata_size.', m_x_max='.$this->m_x_max.', key='.$key);
+            }
         }
         $this->m_gdata = $gdata;
         
@@ -154,7 +188,7 @@ class CGrid {
         for ($x=0; $x<$this->m_x_max; $x++)
         {
             // process columns in 1 row - I visualize this as proceeding
-            // horizontally.
+            // vertically.
             $numCollections = $this->m_y_max-$this->m_collection_size;
             for ($y=0; $y<$numCollections; $y++)
             {
