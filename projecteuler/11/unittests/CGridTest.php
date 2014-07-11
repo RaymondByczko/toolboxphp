@@ -13,6 +13,11 @@
  * getCollections to getHCollections.
  * @change_history 2014-07-10 July 10; RByczko; Changed name of eliminateHalf
  * to eliminateHorizontals.
+ * @change_history 2014-07-11 July 11; RByczko; Made adjustment to test
+ * based on more accurate concept of what consistitutes first and second
+ * in eliminateHorizontals (and eliminateVerticals too). first is at one
+ * pair of $x,$y.  second is right next to it - just increase $x,$y or both by 1.
+ * (And not by m_collection_size).
  */
 require_once '../CGrid.php';
 require_once '../CDiagonalDirection.php';
@@ -85,8 +90,8 @@ class CGridTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($collections[0][2], $this->object->POSSIBLE_CANDIDATE());
 
         $this->assertEquals($collections[1][0], $this->object->POSSIBLE_CANDIDATE());
-        $this->assertEquals($collections[1][1], $this->object->POSSIBLE_CANDIDATE());
-        $this->assertEquals($collections[1][2], $this->object->POSSIBLE_CANDIDATE());
+        $this->assertEquals($collections[1][1], $this->object->NOT_A_CANDIDATE());
+        $this->assertEquals($collections[1][2], $this->object->NOT_A_CANDIDATE());
     }
     
     public function testLargest()

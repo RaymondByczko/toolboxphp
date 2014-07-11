@@ -42,6 +42,8 @@
  * fix - should refer to m_vcollections when context is vertical.
  * @change_history 2014-07-10 July 10; RByczko; Changed name of eliminateHalf
  * to eliminateHorizontals.
+ * @change_history 2014-07-11 July 11; RByczko; Added eliminateVerticals.
+ * Fixed eliminateHorizontals.
  */
 class CGrid {
     private $m_x_max=null;
@@ -122,7 +124,8 @@ class CGrid {
                 $second = $this->m_gdata[$y][$x+$this->m_collection_size];
                 if ($first > $second)
                 {
-                    $this->m_hcollections[$y][$x+$this->m_collection_size] = $this->NOT_A_CANDIDATE;
+                    // Properly id seconds as $x+1.
+                    $this->m_hcollections[$y][$x+1] = $this->NOT_A_CANDIDATE;
                 }
                 if ($first < $second)
                 {
@@ -140,6 +143,44 @@ class CGrid {
             }
         }
     }
+    /**
+     * Considers all columns 'vertically' positioned.
+     * (column is determined by $x in code.)
+     */
+    public function eliminateVerticals()
+    {
+        // proceed along each column - I visualize this as proceeding
+        // horizontally.
+        for ($x=0; $x<$this->m_x_max; $x++)
+        {
+            // process columns in 1 row - I visualize this as proceeding
+            // horizontally.
+            $numCollections = $this->m_y_max-$this->m_collection_size;
+            for ($y=0; $y<$numCollections; $y++)
+            {
+                $first = $this->m_gdata[$y][$x];
+                $second = $this->m_gdata[$y+$this->m_collection_size][$x];
+                if ($first > $second)
+                {
+                    $this->m_vcollections[$y+1][$x] = $this->NOT_A_CANDIDATE;
+                }
+                if ($first < $second)
+                {
+                    $this->m_vcollections[$y][$x] = $this->NOT_A_CANDIDATE;
+                }
+                if ($first == $second)
+                {
+                    // Keep them both as possible candidate if already
+                    // set as such.  Otherwise, also do nothing.
+                    // or...
+                    // Declare the first one as NOT A CANDIDATE.
+                    $this->m_vcollections[$y][$x] = $this->NOT_A_CANDIDATE;
+                }
+                
+            }
+        }      
+    }
+    
     /**
      * Eliminates up to half of all candidates along a set of diagonals
      * running 'southeast'.  Essentially an element at $y,$x is compared
