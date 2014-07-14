@@ -48,6 +48,8 @@
  * array extents due to the fact they are less in 1 or both dimensions
  * depending on what version of eliminate* is called.  Also added tests
  * in loadGrid method since mistakes can occur here easily.
+ * @change_history 2014-07-14 July 14; RByczko; Changed name of
+ * largestOneDiagonal to largestOneDiagonal2_4.
  */
 class CGrid {
     private $m_x_max=null;
@@ -390,7 +392,7 @@ class CGrid {
      * @param type $max_value @todo Is it float or real?
      * @throws Exception In the event of invalid $y, $x.
      */
-    public function largestOneDiagonal($y_d, $x_d, &$y_max, &$x_max, &$max_value)
+    public function largestOneDiagonal2_4($y_d, $x_d, &$y_max, &$x_max, &$max_value)
     {
         if (($x_d>0) && ($y_d != 0))
         {

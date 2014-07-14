@@ -19,7 +19,9 @@
  * pair of $x,$y.  second is right next to it - just increase $x,$y or both by 1.
  * (And not by m_collection_size).
  * @change_history 2014-07-11 July 11; RByczko; Added testEliminateVerticals.
- * @todo - test remaining columns in testEliminateVerticals.
+ * @change_history 2014-07-14 July 14; RByczko; Changed name of
+ * largestOneDiagonal to largestOneDiagonal2_4.
+ * * @todo - test remaining columns in testEliminateVerticals.
  */
 require_once '../CGrid.php';
 require_once '../CDiagonalDirection.php';
@@ -277,7 +279,7 @@ class CGridTest extends PHPUnit_Framework_TestCase {
         $y_max = null;
         $x_max = null;
         $max_value = null;
-        $this->object8_8->largestOneDiagonal(0, 0, $y_max, $x_max, $max_value);
+        $this->object8_8->largestOneDiagonal2_4(0, 0, $y_max, $x_max, $max_value);
         $this->assertEquals(81*81, $max_value);
         $this->assertEquals(2, $y_max);
         $this->assertEquals(2, $x_max);
@@ -285,7 +287,7 @@ class CGridTest extends PHPUnit_Framework_TestCase {
         $y_max = null;
         $x_max = null;
         $max_value = null;
-        $this->object8_8->largestOneDiagonal(0, 1, $y_max, $x_max, $max_value);
+        $this->object8_8->largestOneDiagonal2_4(0, 1, $y_max, $x_max, $max_value);
         $this->assertEquals(25*25, $max_value);
         $this->assertEquals(0, $y_max);
         $this->assertEquals(1, $x_max);
@@ -293,7 +295,7 @@ class CGridTest extends PHPUnit_Framework_TestCase {
         $y_max = null;
         $x_max = null;
         $max_value = null;
-        $this->object8_8->largestOneDiagonal(5, 0, $y_max, $x_max, $max_value);
+        $this->object8_8->largestOneDiagonal2_4(5, 0, $y_max, $x_max, $max_value);
         $this->assertEquals(null, $max_value);
         $this->assertEquals(null, $y_max);
         $this->assertEquals(null, $x_max);

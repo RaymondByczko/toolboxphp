@@ -17,6 +17,8 @@
  * to getHCollections.
  * @change_history 2014-07-10 July 10; RByczko; Changed name of eliminateHalf
  * to eliminateHorizontals.
+ * @change_history 2014-07-14 July 14; RByczko; Changed name of
+ * largestOneDiagonal to largestOneDiagonal2_4.
  */
 
 require_once './CGrid.php';
@@ -62,7 +64,7 @@ $object8_8->eliminateDiagonals2_4();
 $y_max = null;
 $x_max = null;
 $max_value = null;
-$object8_8->largestOneDiagonal(0, 0, $y_max, $x_max, $max_value);
+$object8_8->largestOneDiagonal2_4(0, 0, $y_max, $x_max, $max_value);
 
 echo 'projecteuler/11/main.php: end'."\n";
 ?>
