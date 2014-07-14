@@ -50,6 +50,8 @@
  * in loadGrid method since mistakes can occur here easily.
  * @change_history 2014-07-14 July 14; RByczko; Changed name of
  * largestOneDiagonal to largestOneDiagonal2_4.
+ * @change_history 2014-07-14 July 14; RByczko; Changed name of m_dcollections
+ * to m_2_4_dcollections.
  */
 class CGrid {
     private $m_x_max=null;
@@ -76,7 +78,7 @@ class CGrid {
      */
     private $m_hcollections=null;
     private $m_vcollections=null;
-    private $m_dcollections=null;
+    private $m_2_4_dcollections=null;
     private $m_3_1_dcollections=null;
     public function __construct($x_max, $y_max, $collection_size)
     {
@@ -102,7 +104,7 @@ class CGrid {
         if ( ($this->m_y_max > $this->m_collection_size) &&
     ($this->m_x_max > $this->m_collection_size) )
         {
-            $this->m_dcollections = array_fill(0, $this->m_y_max-$this->m_collection_size, array_fill(0, $this->m_x_max-$this->m_collection_size,$this->POSSIBLE_CANDIDATE));
+            $this->m_2_4_dcollections = array_fill(0, $this->m_y_max-$this->m_collection_size, array_fill(0, $this->m_x_max-$this->m_collection_size,$this->POSSIBLE_CANDIDATE));
             $this->m_3_1_dcollections = array_fill($this->m_collection_size-1, $this->m_y_max-$this->m_collection_size+1, array_fill(0, $this->m_x_max-$this->m_collection_size+1,$this->POSSIBLE_CANDIDATE));
             
         }
@@ -236,11 +238,11 @@ class CGrid {
                 $second = $this->m_gdata[$y+$cs][$x+$cs];    
                 if ($first > $second)
                 {
-                    $this->m_dcollections[$y+1][$x+1] = $this->NOT_A_CANDIDATE;
+                    $this->m_2_4_dcollections[$y+1][$x+1] = $this->NOT_A_CANDIDATE;
                 }
                 if ($first < $second)
                 {
-                    $this->m_dcollections[$y][$x] = $this->NOT_A_CANDIDATE;
+                    $this->m_2_4_dcollections[$y][$x] = $this->NOT_A_CANDIDATE;
                 }
                 if ($first == $second)
                 {
@@ -248,7 +250,7 @@ class CGrid {
                     // set as such.  Otherwise, also do nothing.
                     // or...
                     // Declare first as NOT A CANDIDATE
-                    $this->m_dcollections[$y][$x] = $this->NOT_A_CANDIDATE;
+                    $this->m_2_4_dcollections[$y][$x] = $this->NOT_A_CANDIDATE;
                 }
             }
         }
@@ -411,7 +413,7 @@ class CGrid {
             ($y<=($this->m_y_max-$this->m_collection_size));
             $x++, $y++)
         {
-            $candidate_pos = $this->m_dcollections[$y][$x];
+            $candidate_pos = $this->m_2_4_dcollections[$y][$x];
             if ($candidate_pos == $this->NOT_A_CANDIDATE())
             {
                 continue;
