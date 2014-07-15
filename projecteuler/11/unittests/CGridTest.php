@@ -21,6 +21,7 @@
  * @change_history 2014-07-11 July 11; RByczko; Added testEliminateVerticals.
  * @change_history 2014-07-14 July 14; RByczko; Changed name of
  * largestOneDiagonal to largestOneDiagonal2_4.
+ * @change_history 2014-07-14 July 14; RByczko; Added testLargestDiagonal2_4.
  * * @todo - test remaining columns in testEliminateVerticals.
  */
 require_once '../CGrid.php';
@@ -322,5 +323,45 @@ class CGridTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($collections[5][2], $this->object->NOT_A_CANDIDATE());
         $this->assertEquals($collections[4][3], $this->object->NOT_A_CANDIDATE());
     }
+    
+    public function testLargestDiagonal2_4()
+    {
+        $gdata8_8 = array(
+                0 => array(2, 1, 1, 1, 1, 7, 1, 1 ),
+                1 => array(1, 2, 1, 1, 1, 1, 7, 1 ),
+                2 => array(1, 9, 2, 1, 1, 1, 1, 7 ),
+                3 => array(1, 1, 9, 2, 1, 1, 1, 1 ),
+                4 => array(1, 1, 1, 8, 3, 1, 1, 1 ),
+                5 => array(1, 1, 1, 1, 9, 3, 1, 1 ),
+                6 => array(1, 1, 1, 1, 1, 1, 1, 1 ),
+                7 => array(1, 1, 1, 1, 1, 1, 1, 1 )               
+            );
+        $this->object8_8->loadGrid($gdata8_8);
+        
+        $c2_4 = $this->object8_8->getD2_4Collections();
+        $keys2_4 = array_keys($c2_4);
+        $min_keys2_4 = min($keys2_4);
+        $max_keys2_4 = max($keys2_4);
+        $this->assertEquals($min_keys2_4, 0);
+        $this->assertEquals($max_keys2_4, 4);
+        
+        $this->object8_8->eliminateDiagonals2_4();
+        
+        $c2_4 = $this->object8_8->getD2_4Collections();
+        $keys2_4 = array_keys($c2_4);
+        $min_keys2_4 = min($keys2_4);
+        $max_keys2_4 = max($keys2_4);
+        $this->assertEquals($min_keys2_4, 0);
+        $this->assertEquals($max_keys2_4, 4);
+        
+        $y_largest = null;
+        $x_largest = null;
+        $largest = null;
+        $ret_l = $this->object8_8->largestDiagonal2_4($y_largest, $x_largest, $largest);
+        $this->assertEquals($y_largest, 2);
+        $this->assertEquals($x_largest, 1);
+        $this->assertEquals($largest, 81*72);
+    
 
+    }
 }

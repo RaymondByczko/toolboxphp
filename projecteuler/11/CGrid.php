@@ -52,9 +52,21 @@
  * largestOneDiagonal to largestOneDiagonal2_4.
  * @change_history 2014-07-14 July 14; RByczko; Changed name of m_dcollections
  * to m_2_4_dcollections.
+ * @change_history 2014-07-14 July 14; RByczko; Added documentation for
+ * some variables.  Adjusted allocation for: m_2_4_dcollections.
+ * Added methods: largestDiagonal2_4, getD2_4Collections. Fixed:
+ * eliminateDiagonals2_4.
  */
 class CGrid {
+    /**
+     *
+     * @var int Size of grid along x.  Values of x run from 0 to (m_x_max-1).  
+     */
     private $m_x_max=null;
+    /**
+     *
+     * @var int Size of grid along y.  Value of y run from 0 to (m_y_max-1). 
+     */
     private $m_y_max=null;
     /**
      *
@@ -104,7 +116,7 @@ class CGrid {
         if ( ($this->m_y_max > $this->m_collection_size) &&
     ($this->m_x_max > $this->m_collection_size) )
         {
-            $this->m_2_4_dcollections = array_fill(0, $this->m_y_max-$this->m_collection_size, array_fill(0, $this->m_x_max-$this->m_collection_size,$this->POSSIBLE_CANDIDATE));
+            $this->m_2_4_dcollections = array_fill(0, $this->m_y_max-$this->m_collection_size+1, array_fill(0, $this->m_x_max-$this->m_collection_size+1,$this->POSSIBLE_CANDIDATE));
             $this->m_3_1_dcollections = array_fill($this->m_collection_size-1, $this->m_y_max-$this->m_collection_size+1, array_fill(0, $this->m_x_max-$this->m_collection_size+1,$this->POSSIBLE_CANDIDATE));
             
         }
@@ -230,9 +242,11 @@ class CGrid {
     public function eliminateDiagonals2_4()
     {
         $cs = $this->m_collection_size;
-        for ($y=0; $y<$this->m_y_max-$cs; $y++)
+        $y_limit = $this->m_y_max - $cs -1;
+        $x_limit = $this->m_x_max - $cs -1;
+        for ($y=0; $y<=$y_limit; $y++)
         {
-            for ($x=0; $x<($this->m_x_max-$cs); $x++)
+            for ($x=0; $x<=$x_limit; $x++)
             {
                 $first = $this->m_gdata[$y][$x];
                 $second = $this->m_gdata[$y+$cs][$x+$cs];    
@@ -513,6 +527,76 @@ class CGrid {
         return 1; // success        
     }
     
+    /**
+     * Finds the largest product among the entire set of 2,4 diagonals.
+     *
+     * @param int $y 0 based index of y-coordinate of start of largest product.
+     * @param int $x 0 based index of x-coordinate of start of largest product.
+     * @param int(float) $value The value of that largest product.
+     * @note $y is the first dimension.  It can be seen as running vertical.
+     * @note $x is the second dimension.  It can be seen as running horizontal.
+     * @note @todo possible 'fix' this convention.  Make sure to state it in
+     * some central area.
+     * @note The largest product is specified by the following operands:
+     * ($y,$x), ($y+1,$x+1), ($y+2,$x+2), ($y+3,$x+3)
+     */
+    public function largestDiagonal2_4(&$y, &$x, &$value)
+    {
+        $y_largest = null;
+        $x_largest = null;
+        $largest = null;
+        
+        $x_limit = $this->m_x_max - $this->m_collection_size;
+        $y_limit = $this->m_y_max - $this->m_collection_size;
+        // Initialize largest to first product encountered
+        if ( ($x_limit>=0)&&($y_limit>=0) )
+        {
+            $y_largest=0;
+            $x_largest=0;
+            $largest=$current_value = $this->m_gdata[0][0] * $this->m_gdata[1][1] * $this->m_gdata[2][2] * $this->m_gdata[3][3];
+        }
+        // Along 'side' with x constant as 0, and y varies.
+        $x=0;
+        for ($y=0; $y <= $y_limit; $y++)
+        {
+            $y_max = null;
+            $x_max = null;
+            $max_value = null;
+            echo 'x='.$x.'; y='.$y."\n";
+            $this->largestOneDiagonal2_4($y, $x, $y_max, $x_max, $max_value);
+            if ($max_value > $largest)
+            {
+                $y_largest = $y_max;
+                $x_largest = $x_max;
+                $largest = $max_value;
+            }
+
+        }
+        
+        // Along 'top' with y constant and x varies.
+        $y=0;
+        for ($x=1; $x <= $x_limit; $x++)
+        {
+            $y_max = null;
+            $x_max = null;
+            $max_value = null;
+            echo 'x='.$x.'; y='.$y."\n";
+            $this->largestOneDiagonal2_4($y, $x, $y_max, $x_max, $max_value);
+            if ($max_value > $largest)
+            {
+                $y_largest = $y_max;
+                $x_largest = $x_max;
+                $largest = $max_value;
+            }
+
+        }        
+        $y = $y_largest;
+        $x = $x_largest;
+        $value = $largest;
+        return 1; // success
+        
+    }
+    
     public function getHCollections()
     {
         return $this->m_hcollections;
@@ -524,6 +608,10 @@ class CGrid {
     public function getD3_1Collections()
     {
         return $this->m_3_1_dcollections;
+    }
+    public function getD2_4Collections()
+    {
+        return $this->m_2_4_dcollections;
     }
     public function POSSIBLE_CANDIDATE()
     {
