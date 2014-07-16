@@ -59,6 +59,8 @@
  * @change_history 2014-07-15 July 15; RByczko;  Added methods:
  * largestOneDiagonal3_1, largestDiagonal3_1, largestAllDirections.
  * Added fix todo.
+ * @change_history 2014-07-15 July 16; RByczko; Added method:
+ * getCollectionSet, checkNull. Enhanced: largestAllDirections.
  */
 class CGrid {
     /**
@@ -730,25 +732,142 @@ class CGrid {
         
     }
     
-    public function largestAllDirections()
+    public function largestAllDirections(&$set, &$value)
     {
         $this->eliminateHorizontals();
         $this->eliminateVerticals();
         $this->eliminateDiagonals2_4();
         $this->eliminateDiagonals3_1();
+        
+        $max_set = array();
+        $max_value = null;
+        
         $y_hmax = null;
         $x_hmax = null;
         $v_hmax = null;
         $this->largestHorizontal($y_hmax, $x_hmax, $v_hmax);
+        $this->checkNull($y_hmax, $x_hmax, $v_hmax, 'largestHorizontal');
+        
+        $this->getCollectionSet(CDiagonalDirection::H(), $y_hmax, $x_hmax, $max_set);
+        $max_value = $v_hmax;
+        
         $y_vmax = null;
         $x_vmax = null;
         $v_vmax = null;
         $this->largestVertical($y_vmax, $x_vmax, $v_vmax);
+        $this->checkNull($y_vmax, $x_vmax, $v_vmax, 'largestVertical');
+        if ($v_vmax > $max_value)
+        {
+           $temp_c_set = array();
+           $this->getCollectionSet(CDiagonalDirection::V(), $y_vmax, $x_vmax,$temp_c_set);
+           $max_set = $temp_c_set;
+           $max_value = $v_vmax;
+        }
+        
         $y2_4 = null;
         $x2_4 = null;
         $v_2_4 = null;
         $this->largestDiagonal2_4($y2_4, $x2_4, $v_2_4);
-        //$this->l
+        $this->checkNull($y2_4, $x2_4, $v_2_4, 'largestDiagonal2_4'); 
+        if ($v_2_4 > $max_value)
+        {
+           $temp_c_set = array();
+           $this->getCollectionSet(CDiagonalDirection::D2_4(), $y2_4, $x2_4,$temp_c_set);
+           $max_set = $temp_c_set;
+           $max_value = $v_2_4;
+        }       
+        
+        $y3_1 = null;
+        $x3_1 = null;
+        $v_3_1 = null;
+        $this->largestDiagonal2_4($y2_4, $x2_4, $v_2_4);
+        $this->checkNull($y3_1, $x3_1, $v_3_1, 'largestHorizontal');
+        if ($v_3_1 > $max_value)
+        {
+           $temp_c_set = array();
+           $this->getCollectionSet(CDiagonalDirection::D3_1(), $y3_1, $x3_1,$temp_c_set);
+           $max_set = $temp_c_set;
+           $max_value = $v_3_1;
+        }
+        $set = $max_set;
+        $value = $max_value;
+        
+    }
+    
+    private function checkNull($y, $x, $value, $caller)
+    {
+        if ($y == null)
+        {
+            throw new Exception('checkNull found y is null; caller:'.$caller);
+        }
+        if ($x == null)
+        {
+            throw new Exception('checkNull found x is null; caller:'.$caller);
+        }
+        if ($value == null)
+        {
+            throw new Exception('checkNull found value is null; caller:'.$caller);
+        }    
+    }
+    /**
+     * Give a direction of the associated diagon, whereby the definition
+     * of diagonal is expanded to include horizontal and vertical, and
+     * also given the y,x of a collection set, this method returns via
+     * cs the points that determine that collection set.  It is another
+     * way of expressing collection set.
+     * @param CDiagonalDirection $dd Input. The direction of the collection set.
+     * @param int $y Input. The y coordinate of one end of a collection set.
+     * @param int $x Input. The x coordinate of one end of a collection set.
+     * @param array $cs Output. The collection set itself expressed as a grouping
+     * of a number of (y,x) pairs.
+     * @return int 1 if success; 0 otherwise.
+     */
+    private function getCollectionSet(CDiagonalDirection $dd, $y, $x, &$cs)
+    {
+        if ($dd->isHORIZONTAL())
+        {
+            $temp_cs = array();
+            for ($i=0; $i< $this->m_collection_size; $i++)
+            {
+                $operandy_x = array('y'=>$y, 'x'=>$x+$i);
+                $temp_cs[] = $operandy_x;
+            }
+            $cs = $temp_cs;
+            return 1; // success
+        }
+        if ($dd->isVERTICAL())
+        {
+            $temp_cs = array();
+            for ($j=0; $j< $this->m_collection_size; $j++)
+            {
+                $operandy_x = array('y'=>$y+$j, 'x'=>$x);
+                $temp_cs[] = $operandy_x;
+            }
+            $cs = $temp_cs;
+            return 1; // success
+        }
+        if ($dd->is2_4())
+        {
+            $temp_cs = array();
+            for ($j=0; $j< $this->m_collection_size; $j++)
+            {
+                $operandy_x = array('y'=>$y+$j, 'x'=>$x+$j);
+                $temp_cs[] = $operandy_x;
+            }
+            $cs = $temp_cs;
+            return 1; // success
+        }
+        if ($dd->is3_1())
+        {
+            $temp_cs = array();
+            for ($j=0; $j< $this->m_collection_size; $j++)
+            {
+                $operandy_x = array('y'=>$y-$j, 'x'=>$x+$j);
+                $temp_cs[] = $operandy_x;
+            }
+            $cs = $temp_cs;
+            return 1; // success
+        }      
         
     }
     
