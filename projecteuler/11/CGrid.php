@@ -56,6 +56,9 @@
  * some variables.  Adjusted allocation for: m_2_4_dcollections.
  * Added methods: largestDiagonal2_4, getD2_4Collections. Fixed:
  * eliminateDiagonals2_4.
+ * @change_history 2014-07-15 July 15; RByczko;  Added methods:
+ * largestOneDiagonal3_1, largestDiagonal3_1, largestAllDirections.
+ * Added fix todo.
  */
 class CGrid {
     /**
@@ -454,6 +457,73 @@ class CGrid {
         $max_value = $current_max;
     }
     /**
+     * 
+     * @param int $y_d The y coordinate of one end of a 3_1 diagonal.
+     * @param int $x_d The x coordinate of one end of a 3_1 diagonal.
+     * @param intreference $y_max The y coordinate of a collection whose product
+     * is maximum for that diagonal.
+     * @param intreference $x_max The x coordinate of a collection whose product
+     * is maximum for that diagonal.
+     * @param intreference $max_value The maximum value of all collections
+     * on that diagonal.
+     * @throws Exception
+     * @note It is assumed that method eliminateDiagonals3_1 is called before
+     * this one.
+     */
+    public function largestOneDiagonal3_1($y_d, $x_d, &$y_max, &$x_max, &$max_value)
+    {
+        // See diagram on p. 13 of Diary #5.
+        if (($x_d>=1) && ($y_d<=($this->m_y_max-2) ))
+        {
+            throw new Exception('Invalid x_d,y_d specified as:'.$x_d.', '.$y_d);
+        }
+        if (($x_d<0) || ($y_d > ($this->m_y_max-1)))
+        {
+            throw new Exception('Invalid x_d,y_d specified as:'.$x_d.', '.$y_d);
+        }
+        $max_ypos=null;
+        $max_xpos=null;
+        $current_max=null;
+        $y_limit = $this->m_collection_size-1;
+        $x_limit = $this->m_x_max - $this->m_collection_size;
+        for (
+            $x=$x_d, $y=$y_d; 
+            ($x<=$x_limit) &&
+            ($y>=$y_limit);
+            $x++, $y--)
+        {
+            echo 'checkout';
+            $candidate_pos = $this->m_3_1_dcollections[$y][$x];
+            if ($candidate_pos == $this->NOT_A_CANDIDATE())
+            {
+                echo 'not a cand:'.$y.', '.$x;
+                continue;
+            }
+            // @todo Fix.  Number of operands in multiply is not static set to 4.
+            $current_value = $this->m_gdata[$y][$x] * $this->m_gdata[$y-1][$x+1] * $this->m_gdata[$y-2][$x+2] * $this->m_gdata[$y-3][$x+3];
+            if ($current_max == null)
+            {
+                $max_ypos = $y;
+                $max_xpos = $x;
+                $current_max = $current_value;
+                echo 'current_max='.$current_max;
+            }
+            else
+            {
+                if ($current_value>$current_max)
+                {
+                    $max_ypos = $y;
+                    $max_xpos = $x;
+                    $current_max = $current_value;
+                    echo 'current_max='.$current_max;
+                }
+            }
+        }
+        $y_max = $max_ypos;
+        $x_max = $max_xpos;
+        $max_value = $current_max;       
+    }
+    /**
      * Computes the largest value considering only the complete
      * set of horizontal rows.
      */
@@ -553,6 +623,7 @@ class CGrid {
         {
             $y_largest=0;
             $x_largest=0;
+            // @fix.  This assumes m_collections_size is 4.  Make it generic
             $largest=$current_value = $this->m_gdata[0][0] * $this->m_gdata[1][1] * $this->m_gdata[2][2] * $this->m_gdata[3][3];
         }
         // Along 'side' with x constant as 0, and y varies.
@@ -594,6 +665,90 @@ class CGrid {
         $x = $x_largest;
         $value = $largest;
         return 1; // success
+        
+    }
+    /**
+     * Determine the location and value of the largest collection
+     * among the entire set of 3_1 diagonals.
+     * @param int $y y coordinate of largest collection
+     * @param int $x x coordinate of largest collection
+     * @param int(float) $value Value of the largest at y, x.
+     * @note A 3_1 diagonal specified by one end, that being
+     * the end with the max y value present in the collection,
+     * and the minimum x values.  The other end is the opposite;
+     * which is the convention not used.  The diagonal orginates
+     * in the 3rd quadrant, and ends in the 1st quadrant, figuratively
+     * speaking.
+     */
+    public function largestDiagonal3_1(&$y, &$x, &$value)
+    {
+        $y_largest = null;
+        $x_largest = null;
+        $largest = null;    
+        
+        // Along 'side' with x constant as 0, and y varies.
+        $x=0;
+        $y_limit = $this->m_y_max-1;
+        for ($y=$this->m_collection_size-1; $y <= $y_limit; $y++)
+        {
+            $y_max = null;
+            $x_max = null;
+            $max_value = null;
+            echo 'x='.$x.'; y='.$y."\n";
+            $this->largestOneDiagonal3_1($y, $x, $y_max, $x_max, $max_value);
+            if ($max_value > $largest)
+            {
+                $y_largest = $y_max;
+                $x_largest = $x_max;
+                $largest = $max_value;
+            }
+
+        }   
+        
+        // Along 'bottom' with y constant and x varies.
+        $y=$this->m_y_max-1;
+        $x_limit = $this->m_x_max - $this->m_collection_size;
+        for ($x=1; $x <= $x_limit; $x++)
+        {
+            $y_max = null;
+            $x_max = null;
+            $max_value = null;
+            echo 'x='.$x.'; y='.$y."\n";
+            $this->largestOneDiagonal3_1($y, $x, $y_max, $x_max, $max_value);
+            if ($max_value > $largest)
+            {
+                $y_largest = $y_max;
+                $x_largest = $x_max;
+                $largest = $max_value;
+            }
+
+        }               
+        $y = $y_largest;
+        $x = $x_largest;
+        $value = $largest;
+        return 1; // success       
+        
+    }
+    
+    public function largestAllDirections()
+    {
+        $this->eliminateHorizontals();
+        $this->eliminateVerticals();
+        $this->eliminateDiagonals2_4();
+        $this->eliminateDiagonals3_1();
+        $y_hmax = null;
+        $x_hmax = null;
+        $v_hmax = null;
+        $this->largestHorizontal($y_hmax, $x_hmax, $v_hmax);
+        $y_vmax = null;
+        $x_vmax = null;
+        $v_vmax = null;
+        $this->largestVertical($y_vmax, $x_vmax, $v_vmax);
+        $y2_4 = null;
+        $x2_4 = null;
+        $v_2_4 = null;
+        $this->largestDiagonal2_4($y2_4, $x2_4, $v_2_4);
+        //$this->l
         
     }
     

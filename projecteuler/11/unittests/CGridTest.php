@@ -22,7 +22,10 @@
  * @change_history 2014-07-14 July 14; RByczko; Changed name of
  * largestOneDiagonal to largestOneDiagonal2_4.
  * @change_history 2014-07-14 July 14; RByczko; Added testLargestDiagonal2_4.
- * * @todo - test remaining columns in testEliminateVerticals.
+ * @change_history 2014-07-16 July 16; RByczko; Added tests:
+ * testLargestOneDiagonal3_1, testBCALargestDiagonal3_1,
+ * testBCBLargestDiagonal3_1.
+ * * * @todo - test remaining columns in testEliminateVerticals.
  */
 require_once '../CGrid.php';
 require_once '../CDiagonalDirection.php';
@@ -363,5 +366,92 @@ class CGridTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($largest, 81*72);
     
 
+    }
+    
+    public function testLargestOneDiagonal3_1()
+    {
+         $gdata8_8 = array(
+            0 => array(1, 1, 1, 1, 1, 1, 1, 1 ),
+            1 => array(1, 1, 1, 1, 1, 1, 1, 8 ),
+            2 => array(1, 1, 1, 1, 1, 1, 8, 1 ),
+            3 => array(1, 1, 1, 1, 1, 8, 1, 4 ),
+            4 => array(1, 1, 1, 2, 3, 1, 4, 1 ),
+            5 => array(1, 1, 2, 3, 1, 4, 1, 1 ),
+            6 => array(1, 2, 3, 1, 4, 1, 1, 1 ),
+            7 => array(2, 3, 1, 1, 1, 1, 1, 1 )               
+        );
+        $this->object8_8->loadGrid($gdata8_8);
+        $this->object8_8->eliminateDiagonals3_1(); 
+        
+        $collections = $this->object8_8->getD3_1Collections();
+        $this->assertEquals($collections[7][0], $this->object8_8->POSSIBLE_CANDIDATE());
+        $this->assertEquals($collections[6][1], $this->object8_8->NOT_A_CANDIDATE());
+        $this->assertEquals($collections[5][2], $this->object8_8->NOT_A_CANDIDATE());
+        $this->assertEquals($collections[4][3], $this->object8_8->NOT_A_CANDIDATE());  
+    
+        $this->assertEquals($collections[7][1], $this->object8_8->NOT_A_CANDIDATE());  
+        $this->assertEquals($collections[6][2], $this->object8_8->NOT_A_CANDIDATE());  
+        $this->assertEquals($collections[5][3], $this->object8_8->NOT_A_CANDIDATE());
+        $this->assertEquals($collections[4][4], $this->object8_8->POSSIBLE_CANDIDATE());        
+        $y_max = null;
+        $x_max = null;
+        $max_value = null;
+        $this->object8_8->largestOneDiagonal3_1(7, 1, &$y_max, &$x_max, &$max_value);
+        $this->assertEquals($y_max, 4);
+        $this->assertEquals($x_max, 4);
+        echo 'max_value='.$max_value;
+        $this->assertEquals($max_value, 24*64);
+    }
+    
+    public function testBCALargestDiagonal3_1()
+    {
+        $obj8_8 = new CGrid(8, 8, 4);
+        $gdata8_8 = array(
+                0 => array(1, 1, 1, 4, 1, 1, 1, 1 ),
+                1 => array(1, 1, 4, 1, 1, 1, 1, 1 ),
+                2 => array(1, 4, 1, 1, 1, 1, 1, 1 ),
+                3 => array(4, 1, 1, 1, 1, 1, 1, 1 ),
+                4 => array(1, 1, 1, 1, 1, 1, 1, 3 ),
+                5 => array(1, 1, 1, 1, 1, 1, 3, 1 ),
+                6 => array(1, 1, 1, 1, 1, 3, 1, 1 ),
+                7 => array(1, 1, 1, 1, 3, 1, 1, 1 )               
+            );
+        $obj8_8->loadGrid($gdata8_8);
+        $obj8_8->eliminateDiagonals3_1();
+                
+        $y_largest = null;
+        $x_largest = null;
+        $largest = null;
+        
+        $ret_l = $obj8_8->largestDiagonal3_1($y_largest, $x_largest, $largest);
+        $this->assertEquals($y_largest, 3);
+        $this->assertEquals($x_largest, 0);
+        $this->assertEquals($largest, 4*4*4*4);       
+    }
+    
+    public function testBCBLargestDiagonal3_1()
+    {
+        $obj8_8 = new CGrid(8, 8, 4);
+        $gdata8_8 = array(
+                0 => array(1, 1, 1, 4, 1, 1, 1, 1 ),
+                1 => array(1, 1, 4, 1, 1, 1, 1, 1 ),
+                2 => array(1, 4, 1, 1, 1, 1, 1, 1 ),
+                3 => array(4, 1, 1, 1, 1, 1, 1, 1 ),
+                4 => array(1, 1, 1, 1, 1, 1, 1, 7 ),
+                5 => array(1, 1, 1, 1, 1, 1, 7, 1 ),
+                6 => array(1, 1, 1, 1, 1, 7, 1, 1 ),
+                7 => array(1, 1, 1, 1, 7, 1, 1, 1 )               
+            );
+        $obj8_8->loadGrid($gdata8_8);
+        $obj8_8->eliminateDiagonals3_1();
+                
+        $y_largest = null;
+        $x_largest = null;
+        $largest = null;
+        
+        $ret_l = $obj8_8->largestDiagonal3_1($y_largest, $x_largest, $largest);
+        $this->assertEquals($y_largest, 7);
+        $this->assertEquals($x_largest, 4);
+        $this->assertEquals($largest, 7*7*7*7);       
     }
 }
