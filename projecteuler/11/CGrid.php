@@ -61,6 +61,8 @@
  * Added fix todo.
  * @change_history 2014-07-15 July 16; RByczko; Added method:
  * getCollectionSet, checkNull. Enhanced: largestAllDirections.
+ * @change_history 2014-07-?? July; RByczko; Changed reference parameters
+ * in largestHorizontal method.  Fixed largestAllDirections. Fixed checkNull.
  */
 class CGrid {
     /**
@@ -529,7 +531,7 @@ class CGrid {
      * Computes the largest value considering only the complete
      * set of horizontal rows.
      */
-    public function largestHorizontal(&$y, &$x, &$value)
+    public function largestHorizontal(&$ry, &$rx, &$rvalue)
     {
         $y_max=null;
         $x_max=null;
@@ -557,9 +559,9 @@ class CGrid {
                 }
             }
         }
-        $y = $y_max;
-        $x = $x_max;
-        $value = $largest;
+        $ry = $y_max;
+        $rx = $x_max;
+        $rvalue = $largest;
         return 1; // success
     }
     
@@ -780,7 +782,7 @@ class CGrid {
         $y3_1 = null;
         $x3_1 = null;
         $v_3_1 = null;
-        $this->largestDiagonal2_4($y2_4, $x2_4, $v_2_4);
+        $this->largestDiagonal3_1($y3_1, $x3_1, $v_3_1);
         $this->checkNull($y3_1, $x3_1, $v_3_1, 'largestHorizontal');
         if ($v_3_1 > $max_value)
         {
@@ -796,15 +798,15 @@ class CGrid {
     
     private function checkNull($y, $x, $value, $caller)
     {
-        if ($y == null)
+        if ($y === null)
         {
             throw new Exception('checkNull found y is null; caller:'.$caller);
         }
-        if ($x == null)
+        if ($x === null)
         {
             throw new Exception('checkNull found x is null; caller:'.$caller);
         }
-        if ($value == null)
+        if ($value === null)
         {
             throw new Exception('checkNull found value is null; caller:'.$caller);
         }    
