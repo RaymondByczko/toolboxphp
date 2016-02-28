@@ -1,0 +1,2 @@
+php_value include_path /home/raymond/RB/RByczko002_phpStuff/toolboxphp/newsletter/php/lib
+php_value openbase_dir /home/raymond/RB/RByczko002_phpStuff/toolboxphp/newsletter/logs/
