@@ -10,6 +10,8 @@
  * with jquery and jquery validation. See:
  * 		http://jqueryvalidation.org/
  * Also documented setids method.
+ * @change_history 2016-03-03, RByczko, Added import method
+ * to import new signup into mysql database.
  */
 ?>
 <?php
@@ -86,10 +88,10 @@ action="<?php echo $this->_action;?>"
 method="<?php echo $this->_method;?>"
 >
 <label for="fname">Name</label>
-<input id="<?php echo $this->_id_signupname;?>" type="text" name="signupname" minlength="2" />
+<input id="<?php echo $this->_id_signupname;?>" type="text" name="signupname" minlength="2" title="Enter name (2 char min)" />
 <br></br>
 <label for="femail">Email</label>
-<input id="<?php echo $this->_id_signupemail;?>" type="email" name="signupemail" />
+<input id="<?php echo $this->_id_signupemail;?>" type="email" name="signupemail" title="Enter email (@ required)" />
 <br></br>
 <input type="submit" value="Sign Up!"/>
 </form>
@@ -149,6 +151,44 @@ $("#<?php echo $this->_id_form;?>").validate({
 		$formNames[] = 'signupname';
 		$formNames[] = 'signupemail';
 		return $formNames;
+	}
+
+	/*
+	 * @purpose Imports the form values into the configured database.
+	 */
+	public function import($formvalues)
+	{
+		if (!array_key_exists('signupname', $formvalues))
+		{
+			throw new Exception('signupname entry not in formvalues');
+		}
+		if (!array_key_exists('signupemail', $formvalues))
+		{
+			throw new Exception('signupemail entry not in formvalues');
+		}
+		$dbh = null;
+		try {
+			$user = 'lunar51_newladmi';
+			$pass = 'TTRRII%65m8';
+			$dbname = 'lunar51_newsletter';
+			$host = 'localhost';
+			$dbh = new PDO('mysql:host='.$host.';dbname='.$dbname, $user, $pass);
+			$datenow = date('Y-m-d H:i:s');
+			$stmt = $dbh->prepare("INSERT INTO signup (name, email, create_date) VALUES (:name, :email, :date)");
+			$stmt->bindParam(':name', $name);
+			$stmt->bindParam(':email', $email);
+			$stmt->bindParam(':date', $datenow);
+			$name = $formvalues['signupname'];
+			$email = $formvalues['signupemail'];
+			$datenow = date('Y-m-d H:i:s');
+			$stmt->execute();
+			$dbh = null;
+		}
+		catch(PDOException $e)
+		{
+			$dbh = null;
+			throw $e;
+		}
 	}
 	
 }

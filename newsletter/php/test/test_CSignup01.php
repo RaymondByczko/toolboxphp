@@ -7,6 +7,8 @@
  * @purpose A test page used to test the php class
  * CSignup.php.
  * @change_history 2016-03-01, RByczko, Added validation.
+ * @change_history 2016-03-03, RByczko, Added doctype and
+ * other html parts.
  */
 ?>
 <?php
@@ -23,7 +25,8 @@ $objCS->setids($theIds);
 // Fourth, set the validation flag.
 $objCS->validation(TRUE);
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="en-US">
 <head>
 <?php
 $objCS->style();
@@ -35,6 +38,8 @@ $objCS->script();
 ?>
 <?php
 echo '<pre>test_CSignup01.php: start</pre>';
+echo '<hr></hr>';
 $objCS->display();
+echo '<hr></hr>';
 echo '<pre>test_CSignup01.php: end</pre>';
 ?>

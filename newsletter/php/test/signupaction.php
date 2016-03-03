@@ -8,6 +8,8 @@
  * @change_history 2016-02-28, RByczko, Started this file.
  * @change_history 2016-03-01, RByczko, Corrected spelling
  * for email.
+ * @change_history 2016-03-03, RByczko, Added ability to import
+ * new signup into mysql database.
  */
 ?>
 <?php
@@ -23,6 +25,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	$email = $_POST[$fn[1]];
 	echo $name."\n";
 	echo $email."\n";
+	try {
+		$objCS->import($_POST);
+	}
+	catch (PDOException $e)
+	{
+		echo 'PDO except caught'."\n";
+		echo '...msg='.$e->getMessage()."\n";
+	}
 	}
 }
 ?>
