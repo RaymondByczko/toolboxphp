@@ -12,9 +12,12 @@
  * Also documented setids method.
  * @change_history 2016-03-03, RByczko, Added import method
  * to import new signup into mysql database.
+ * @change_history 2016-03-07, RByczko, Removed security risk.
+ * Put database artifacts into seperate file.
  */
 ?>
 <?php
+require_once('config/database.php');
 
 class CSignup
 {
@@ -168,10 +171,10 @@ $("#<?php echo $this->_id_form;?>").validate({
 		}
 		$dbh = null;
 		try {
-			$user = 'lunar51_newladmi';
-			$pass = 'TTRRII%65m8';
-			$dbname = 'lunar51_newsletter';
-			$host = 'localhost';
+			$user = CDatabaseConfig::user();
+			$pass = CDatabaseConfig::password();
+			$dbname = CDatabaseConfig::database();
+			$host = CDatabaseConfig::host();
 			$dbh = new PDO('mysql:host='.$host.';dbname='.$dbname, $user, $pass);
 			$datenow = date('Y-m-d H:i:s');
 			$stmt = $dbh->prepare("INSERT INTO signup (name, email, create_date) VALUES (:name, :email, :date)");
