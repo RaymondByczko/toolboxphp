@@ -14,6 +14,8 @@
  * to import new signup into mysql database.
  * @change_history 2016-03-07, RByczko, Removed security risk.
  * Put database artifacts into seperate file.
+ * @change_history 2016-03-07, RByczko, Added json method
+ * to return json representation of database (to display etc).
  */
 ?>
 <?php
@@ -194,5 +196,39 @@ $("#<?php echo $this->_id_form;?>").validate({
 		}
 	}
 	
+	/*
+	 * @purpose Retrieves the entire configured database, in json format.
+	 */
+	public function json()
+	{
+		try {
+			$user = CDatabaseConfig::user();
+			$pass = CDatabaseConfig::password();
+			$dbname = CDatabaseConfig::database();
+			$host = CDatabaseConfig::host();
+			$dbh = new PDO('mysql:host='.$host.';dbname='.$dbname, $user, $pass);
+			$datenow = date('Y-m-d H:i:s');
+			$stmt = $dbh->prepare('SELECT name, email, create_date FROM signup');
+			$retExe = $stmt->execute();
+			if (!$retExe)
+			{
+
+			}
+			$fetched_array = array();
+			while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
+			{
+				$fetched_array[] = $row;
+			}
+			$dbh = null;
+			// var_dump($fetched_array);
+			$fetched_json = json_encode($fetched_array);
+			return $fetched_json;
+		}
+		catch(PDOException $e)
+		{
+			$dbh = null;
+			throw $e;
+		}
+	}
 }
 ?>
