@@ -12,6 +12,14 @@ $include_this = __DIR__.'/../'.$adjusted.'.php';
 /**
 echo 'include_this:'.$include_this."\n";
 **/
-include($include_this);
+if (file_exists($include_this))
+{
+	include($include_this);
+	return true;
+}
+else
+{
+	return false;
+}
 });
 ?>
