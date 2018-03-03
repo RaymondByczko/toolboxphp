@@ -2,6 +2,18 @@
 
 RByczko, 2012-02-07, Feb 7, 2012
 
+## Status
+
+This public repository is undergoing development.
+
+Accordingly it is draft work.
+
+## Installation
+
+This repository is under development.
+
+Specific installation instructions will be added soon.
+
 ## Change log
 
 date: 2012-02-12 - added ctlwebservice
