@@ -1,11 +1,17 @@
-[![Build Status](https://travis-ci.org/RaymondByczko/toolboxphp.svg?branch=master)](https://travis-ci.org/RaymondByczko/toolboxphp)
+# toolboxphp [![Build Status](https://travis-ci.org/RaymondByczko/toolboxphp.svg?branch=master)](https://travis-ci.org/RaymondByczko/toolboxphp)
+
 RByczko, 2012-02-07, Feb 7, 2012
-Change log:
+
+## Change log
+
 date: 2012-02-12 - added ctlwebservice
 date: 2012-02-13 - added some DB functionality to ctlwebservice
 date: 2012-02-14 - pushed code to shared server for a deployment test.
 To this end, used env variables in .htaccess (SetEnv).
 date: 2013-02-18 - added dbimport and started populating it.
+date: 2018-03-02 - added Travis CI.  Got it to pass.   Need to enhance.
+
+## Purpose
 
 The purpose of this repo is to contain a set of PHP utilities
 that serve a purpose in software development.  Essentially
@@ -18,6 +24,8 @@ a set of pages too slowly for an impatient client.
 
 Every utility is given its own directory in the toolboxphp
 repository.
+
+## Utilities
 
 * hasdbchanged - a set of php files for querying into
 running mysql databases, and determines if the database has
