@@ -9,5 +9,4 @@ services:
   - mysql
 
 before_install:
-  - mysql -e 'CREATE DATABASE toolboxphp_test; USE toolboxphp_test;'
   - mysql -e 'source hasdbchanged/sql/snapshotstructure.sql;'
