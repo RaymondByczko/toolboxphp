@@ -26,7 +26,7 @@
 		}
 		public function getTable()
 		{
-			return 'users';
+			return 'toolboxphp_users';
 		}
 	}
 ?>

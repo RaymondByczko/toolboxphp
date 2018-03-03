@@ -1,2 +1,2 @@
 USE toolboxphp_test;
-CREATE TABLE users (name VARCHAR(20), occupation VARCHAR(10));
+CREATE TABLE toolboxphp_users (name VARCHAR(20), occupation VARCHAR(10));
