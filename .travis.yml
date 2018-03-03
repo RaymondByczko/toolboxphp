@@ -10,3 +10,4 @@ services:
 
 before_install:
   - mysql -e 'source hasdbchanged/sql/snapshotstructure.sql;'
+  - mysql -e 'source hasdbchanged/test/createtable.sql;'
