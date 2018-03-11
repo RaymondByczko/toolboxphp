@@ -1,5 +1,5 @@
 {
-	"name":"RaymondByczko/toolboxphp",
+	"name":"raymond-byczko/toolboxphp",
 	"description":"A generic toolbox of php code",
 	"require": {
 	   "php":"^7.0"
