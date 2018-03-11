@@ -1,4 +1,21 @@
 {
+	"name":"RaymondByczko/toolboxphp",
+	"description":"A generic toolbox of php code",
+	"require": {
+	   "php":"^7.0"
+	},
+	"type": "library",
+	"autoload": {
+	    "psr-4": {"\\hasdbchanged": "hasdbchanged/"}
+	}
+	"authors": [
+		{
+			"name": "Raymond Byczko",
+			"email" "raymondbyczko@att.net"
+		}
+	]
+}
+{
     "require-dev": {
         "phpunit/phpunit": "^7.0"
     }
