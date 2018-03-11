@@ -6,7 +6,7 @@
 	},
 	"type": "library",
 	"autoload": {
-	    "psr-4": {"\\hasdbchanged": "hasdbchanged/"}
+	    "psr-4": {"hasdbchanged\\": "hasdbchanged/"}
 	},
 	"authors": [
 		{
