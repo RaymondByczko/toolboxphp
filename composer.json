@@ -7,7 +7,7 @@
 	"type": "library",
 	"autoload": {
 	    "psr-4": {"\\hasdbchanged": "hasdbchanged/"}
-	}
+	},
 	"authors": [
 		{
 			"name": "Raymond Byczko",
