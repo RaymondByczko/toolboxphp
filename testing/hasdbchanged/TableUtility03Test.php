@@ -42,7 +42,7 @@ class TableUtility03Test extends TestCase
 
 		$tblName = $snapshot->getTableName();
 
-		$this->assertSame($tblName, 'users');
+		$this->assertSame($tblName, 'toolboxphp_users');
 
 		$this->assertSame($snapshot->getColDataPair(0)['name'], 'name');
 		$this->assertSame($snapshot->getColDataPair(0)['type'], 'varchar(20)');

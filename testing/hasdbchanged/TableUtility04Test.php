@@ -34,7 +34,7 @@ class TableUtility04Test extends TestCase
 
 		$this->assertSame(is_array($fullFormat), TRUE);
 		$this->assertSame(array_key_exists('name', $fullFormat), TRUE);
-		$this->assertSame($fullFormat['name'], 'mycrm');
+		$this->assertSame($fullFormat['name'], 'toolboxphp_test');
 		$this->assertSame(array_key_exists('tables', $fullFormat), TRUE);
 		$this->assertSame(is_array($fullFormat['tables']), TRUE);
 		$this->assertSame(count($fullFormat['tables']), 1);
