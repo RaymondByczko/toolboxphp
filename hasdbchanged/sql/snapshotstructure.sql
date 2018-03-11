@@ -1,3 +1,7 @@
+CREATE DATABASE toolboxphp_test;
+
+USE toolboxphp_test;
+
 CREATE TABLE DATABASE2 (id INT(20) AUTO_INCREMENT PRIMARY KEY,
 snapshottime TIMESTAMP,
 databasename varchar(20))
