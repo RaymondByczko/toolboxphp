@@ -13,10 +13,8 @@
 			"name":"Raymond Byczko",
 			"email":"raymondbyczko@att.net"
 		}
-	]
-}
-{
-    "require-dev": {
-        "phpunit/phpunit": "^7.0"
-    }
+	],
+	"require-dev": {
+	    "phpunit/phpunit": "^7.0"
+	}
 }
