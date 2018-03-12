@@ -1,6 +1,8 @@
 # toolboxphp [![Build Status](https://travis-ci.org/RaymondByczko/toolboxphp.svg?branch=master)](https://travis-ci.org/RaymondByczko/toolboxphp)
 
-RByczko, 2012-02-07, Feb 7, 2012
+## Last mod date
+
+2018-03-12
 
 ## Status
 
@@ -11,6 +13,49 @@ Accordingly it is draft work.
 ## Installation
 
 This repository is under development.
+
+Here are draft install instructions.
+
+#Step 1
+
+Add a composer.json file or edit yours to include the following.
+
+```json
+{
+    "require": {
+        "raymond-byczko/toolboxphp": "dev-master"
+    }
+}
+```
+#Step 2
+
+Edit the file that contains your database credentials.
+For toolboxphp, this is:
+
+vendor/raymond-byczko/toolboxphp/hasdbchanged/test/TestAttributes.php
+
+#Step 3
+
+Create a test file to make sure you can autoload correctly.
+Here is an example
+```php
+<?php
+
+	$al = __DIR__."/../vendor/autoload.php";
+	require $al;
+	echo '<pre>Inside hitoolbox.php</pre>';
+	echo '<pre>'.$al.'</pre>';
+	$objTU = new \hasdbchanged\TableUtility();
+	$dbattrib = new \hasdbchanged\test\TestAttributes();
+	$objTU->setInformation($dbattrib);
+	$fullFormat = $objTU->getFullFormat();
+	echo '<pre>'."\n";
+	echo 'fullFormat='.var_export($fullFormat, TRUE)."\n";
+	echo '</pre>'."\n";
+
+?>
+```
+
 
 Specific installation instructions will be added soon.
 
